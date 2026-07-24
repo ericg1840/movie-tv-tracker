@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { searchTitles } from '../lib/omdb';
 import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
+import { DiscoverGrid } from './DiscoverGrid';
 import type { OmdbSearchItem } from '../types';
 
 export function SearchTab() {
@@ -59,7 +60,7 @@ export function SearchTab() {
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search title..."
         autoCapitalize="none"
-        className="w-full rounded-xl border border-black/10 bg-white px-4 py-2.5 text-base outline-none focus:border-purple-500 dark:border-white/10 dark:bg-neutral-900 dark:text-neutral-100"
+        className="w-full rounded-2xl border border-black/5 bg-white px-4 py-3 text-base shadow-sm outline-none ring-1 ring-black/[0.02] focus:border-purple-400 dark:border-white/5 dark:bg-neutral-900 dark:text-neutral-100 dark:ring-white/[0.02]"
       />
 
       <div className="flex gap-2 text-sm">
@@ -84,6 +85,8 @@ export function SearchTab() {
         ))}
       </div>
 
+      {query.trim().length < 2 && <DiscoverGrid />}
+
       {loading && <p className="text-sm text-neutral-500">Searching...</p>}
       {error && <p className="text-sm text-red-500">{error}</p>}
       {!loading && query.trim().length >= 2 && results.length === 0 && !error && (
@@ -96,11 +99,11 @@ export function SearchTab() {
           return (
             <div
               key={r.imdbID}
-              className="flex items-center gap-3 rounded-xl border border-black/10 bg-white p-2 dark:border-white/10 dark:bg-neutral-900"
+              className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white p-2.5 shadow-sm ring-1 ring-black/[0.02] dark:border-white/5 dark:bg-neutral-900 dark:ring-white/[0.02]"
             >
               <button
                 onClick={() => openSearch(r)}
-                className="h-16 w-11 shrink-0 overflow-hidden rounded-md bg-neutral-200 dark:bg-neutral-800"
+                className="aspect-[2/3] h-16 shrink-0 overflow-hidden rounded-lg bg-neutral-200 dark:bg-neutral-800"
               >
                 {r.Poster && r.Poster !== 'N/A' ? (
                   <img

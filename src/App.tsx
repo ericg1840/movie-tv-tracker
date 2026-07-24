@@ -54,9 +54,12 @@ function App() {
     <TitlesProvider>
       <DetailProvider>
         <div className="mx-auto flex min-h-svh max-w-lg flex-col bg-neutral-50 dark:bg-neutral-950">
-          <header className="sticky top-0 z-10 border-b border-black/10 bg-white/95 px-4 py-3 backdrop-blur dark:border-white/10 dark:bg-neutral-950/95">
-            <h1 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
-              🎬 Watchlist
+          <header className="sticky top-0 z-10 border-b border-black/10 bg-white/95 px-4 py-3.5 backdrop-blur dark:border-white/10 dark:bg-neutral-950/95">
+            <h1 className="flex items-center gap-1.5 text-lg font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
+              <span>🎬</span>
+              <span className="bg-gradient-to-r from-purple-600 to-fuchsia-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-fuchsia-400">
+                Watchlist
+              </span>
             </h1>
           </header>
 

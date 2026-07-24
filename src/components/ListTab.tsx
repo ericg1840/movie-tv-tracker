@@ -37,7 +37,7 @@ export function ListTab({
         <p className="text-sm text-neutral-500">{emptyMessage}</p>
       )}
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         {items.map((title) => (
           <TitleCard key={title.id} title={title} />
         ))}

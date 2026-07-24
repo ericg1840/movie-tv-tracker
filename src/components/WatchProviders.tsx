@@ -13,7 +13,7 @@ function ProviderRow({ label, providers }: { label: string; providers?: WatchPro
             src={providerLogoUrl(p.logo_path)}
             alt={p.provider_name}
             title={p.provider_name}
-            className="h-10 w-10 rounded-lg"
+            className="h-11 w-11 rounded-xl shadow-sm"
           />
         ))}
       </div>
@@ -49,7 +49,7 @@ export function WatchProviders({ imdbId }: { imdbId: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-2 rounded-lg border border-black/10 p-3 dark:border-white/10">
+    <div className="flex flex-col gap-2.5 rounded-2xl border border-black/5 bg-neutral-50 p-3.5 dark:border-white/5 dark:bg-neutral-950/40">
       <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
         Where to watch
       </p>

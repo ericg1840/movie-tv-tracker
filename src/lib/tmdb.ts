@@ -58,3 +58,52 @@ export async function getWatchProviders(imdbId: string): Promise<WatchProviders 
     buy: region.buy,
   };
 }
+
+export interface TrendingItem {
+  id: number;
+  media_type: 'movie' | 'tv';
+  title: string;
+  year: string | null;
+  poster_path: string | null;
+}
+
+export function posterUrl(path: string): string {
+  return `https://image.tmdb.org/t/p/w342${path}`;
+}
+
+interface TmdbTrendingResult {
+  id: number;
+  media_type: string;
+  title?: string;
+  name?: string;
+  release_date?: string;
+  first_air_date?: string;
+  poster_path: string | null;
+}
+
+export async function getTrending(): Promise<TrendingItem[]> {
+  const res = await fetch(`${BASE_URL}/trending/all/week?api_key=${apiKey}`);
+  if (!res.ok) throw new Error('Failed to load trending titles');
+  const data = await res.json();
+  const results: TmdbTrendingResult[] = data.results ?? [];
+
+  return results
+    .filter((r) => r.media_type === 'movie' || r.media_type === 'tv')
+    .map((r) => ({
+      id: r.id,
+      media_type: r.media_type as 'movie' | 'tv',
+      title: r.title ?? r.name ?? 'Untitled',
+      year: (r.release_date ?? r.first_air_date ?? '').slice(0, 4) || null,
+      poster_path: r.poster_path,
+    }));
+}
+
+export async function getImdbId(
+  tmdbId: number,
+  mediaType: 'movie' | 'tv',
+): Promise<string | null> {
+  const res = await fetch(`${BASE_URL}/${mediaType}/${tmdbId}/external_ids?api_key=${apiKey}`);
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data.imdb_id || null;
+}
