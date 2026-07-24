@@ -85,7 +85,7 @@ export function SearchTab() {
         ))}
       </div>
 
-      {query.trim().length < 2 && <DiscoverGrid />}
+      {query.trim().length < 2 && <DiscoverGrid type={type} />}
 
       {loading && <p className="text-sm text-neutral-500">Searching...</p>}
       {error && <p className="text-sm text-red-500">{error}</p>}

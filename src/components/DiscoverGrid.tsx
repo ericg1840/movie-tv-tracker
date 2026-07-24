@@ -2,24 +2,32 @@ import { useEffect, useState } from 'react';
 import { getTrending, posterUrl, type TrendingItem } from '../lib/tmdb';
 import { useDetail } from '../context/DetailContext';
 
-export function DiscoverGrid() {
+export function DiscoverGrid({ type }: { type?: 'movie' | 'series' }) {
   const [items, setItems] = useState<TrendingItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { openDiscover } = useDetail();
 
+  const mediaType = type === 'series' ? 'tv' : type === 'movie' ? 'movie' : undefined;
+
   useEffect(() => {
-    getTrending()
+    setLoading(true);
+    getTrending(mediaType)
       .then(setItems)
       .catch((err) => setError(err instanceof Error ? err.message : 'Failed to load trending'))
       .finally(() => setLoading(false));
-  }, []);
+  }, [mediaType]);
+
+  const heading =
+    mediaType === 'movie'
+      ? 'Trending movies this week'
+      : mediaType === 'tv'
+        ? 'Trending TV this week'
+        : 'Trending this week';
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-        Trending this week
-      </h2>
+      <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">{heading}</h2>
 
       {loading && <p className="text-sm text-neutral-500">Loading…</p>}
       {error && <p className="text-sm text-red-500">{error}</p>}

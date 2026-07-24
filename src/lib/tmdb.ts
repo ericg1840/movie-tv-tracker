@@ -81,17 +81,18 @@ interface TmdbTrendingResult {
   poster_path: string | null;
 }
 
-export async function getTrending(): Promise<TrendingItem[]> {
-  const res = await fetch(`${BASE_URL}/trending/all/week?api_key=${apiKey}`);
+export async function getTrending(mediaType?: 'movie' | 'tv'): Promise<TrendingItem[]> {
+  const path = mediaType ? `trending/${mediaType}/week` : 'trending/all/week';
+  const res = await fetch(`${BASE_URL}/${path}?api_key=${apiKey}`);
   if (!res.ok) throw new Error('Failed to load trending titles');
   const data = await res.json();
   const results: TmdbTrendingResult[] = data.results ?? [];
 
   return results
-    .filter((r) => r.media_type === 'movie' || r.media_type === 'tv')
+    .filter((r) => mediaType || r.media_type === 'movie' || r.media_type === 'tv')
     .map((r) => ({
       id: r.id,
-      media_type: r.media_type as 'movie' | 'tv',
+      media_type: mediaType ?? (r.media_type as 'movie' | 'tv'),
       title: r.title ?? r.name ?? 'Untitled',
       year: (r.release_date ?? r.first_air_date ?? '').slice(0, 4) || null,
       poster_path: r.poster_path,
