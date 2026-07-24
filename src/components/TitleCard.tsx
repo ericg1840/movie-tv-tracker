@@ -1,5 +1,7 @@
 import type { Title } from '../types';
 import { useTitles } from '../context/TitlesContext';
+import { useDetail } from '../context/DetailContext';
+import { StatusActions } from './StatusActions';
 
 function formatDate(iso: string | null): string | null {
   if (!iso) return null;
@@ -11,13 +13,18 @@ function formatDate(iso: string | null): string | null {
 }
 
 export function TitleCard({ title }: { title: Title }) {
-  const { setStatus, setRating, remove } = useTitles();
+  const { remove } = useTitles();
+  const { openStored } = useDetail();
   const releaseLabel = formatDate(title.released_on);
   const isUpcoming = title.released_on ? new Date(title.released_on) > new Date() : false;
 
   return (
     <div className="flex gap-3 rounded-xl border border-black/10 bg-white p-3 shadow-sm dark:border-white/10 dark:bg-neutral-900">
-      <div className="h-24 w-16 shrink-0 overflow-hidden rounded-lg bg-neutral-200 dark:bg-neutral-800">
+      <button
+        onClick={() => openStored(title)}
+        aria-label={`View details for ${title.title}`}
+        className="h-24 w-16 shrink-0 overflow-hidden rounded-lg bg-neutral-200 dark:bg-neutral-800"
+      >
         {title.poster_url ? (
           <img
             src={title.poster_url}
@@ -28,13 +35,16 @@ export function TitleCard({ title }: { title: Title }) {
         ) : (
           <div className="flex h-full w-full items-center justify-center text-2xl">🎬</div>
         )}
-      </div>
+      </button>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="truncate text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+          <button
+            onClick={() => openStored(title)}
+            className="truncate text-left text-sm font-semibold text-neutral-900 dark:text-neutral-100"
+          >
             {title.title}
-          </h3>
+          </button>
           <button
             onClick={() => remove(title.id)}
             aria-label="Remove"
@@ -63,65 +73,8 @@ export function TitleCard({ title }: { title: Title }) {
           <p className="truncate text-xs text-neutral-500 dark:text-neutral-400">{title.genre}</p>
         )}
 
-        <div className="mt-1 flex flex-wrap items-center gap-2">
-          {title.status === 'want_to_watch' && (
-            <>
-              <button
-                onClick={() => setStatus(title.id, 'watching')}
-                className="rounded-full bg-purple-600 px-3 py-1 text-xs font-medium text-white hover:bg-purple-700"
-              >
-                ▶ Start watching
-              </button>
-              <button
-                onClick={() => setStatus(title.id, 'watched')}
-                className="rounded-full border border-black/10 px-3 py-1 text-xs font-medium text-neutral-700 hover:bg-neutral-100 dark:border-white/10 dark:text-neutral-200 dark:hover:bg-neutral-800"
-              >
-                ✓ Mark watched
-              </button>
-            </>
-          )}
-
-          {title.status === 'watching' && (
-            <>
-              <span className="rounded-full bg-purple-100 px-2 py-1 text-xs font-medium text-purple-700 dark:bg-purple-900/40 dark:text-purple-300">
-                Watching
-              </span>
-              <button
-                onClick={() => setStatus(title.id, 'watched')}
-                className="rounded-full bg-purple-600 px-3 py-1 text-xs font-medium text-white hover:bg-purple-700"
-              >
-                ✓ Mark watched
-              </button>
-            </>
-          )}
-
-          {title.status === 'watched' && (
-            <>
-              <label className="flex items-center gap-1 text-xs text-neutral-600 dark:text-neutral-300">
-                My rating
-                <select
-                  value={title.my_rating ?? ''}
-                  onChange={(e) =>
-                    setRating(title.id, e.target.value ? Number(e.target.value) : null)
-                  }
-                  className="rounded border border-black/10 bg-transparent px-1 py-0.5 dark:border-white/10"
-                >
-                  <option value="">–</option>
-                  {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
-                    <option key={n} value={n}>
-                      {n}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <button
-                onClick={() => setStatus(title.id, 'want_to_watch')}
-                className="rounded-full border border-black/10 px-3 py-1 text-xs font-medium text-neutral-700 hover:bg-neutral-100 dark:border-white/10 dark:text-neutral-200 dark:hover:bg-neutral-800"
-              >
-                ↺ Rewatch
-              </button>
-            </>
-          )}
+        <div className="mt-1">
+          <StatusActions title={title} />
         </div>
       </div>
     </div>

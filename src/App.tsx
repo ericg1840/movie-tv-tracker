@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { TitlesProvider } from './context/TitlesContext';
+import { DetailProvider } from './context/DetailContext';
 import { BottomNav, type Tab } from './components/BottomNav';
 import { SearchTab } from './components/SearchTab';
 import { ListTab } from './components/ListTab';
+import { DetailModal } from './components/DetailModal';
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -51,19 +53,23 @@ function App() {
 
   return (
     <TitlesProvider>
-      <div className="mx-auto flex min-h-svh max-w-lg flex-col bg-neutral-50 dark:bg-neutral-950">
-        <header className="sticky top-0 z-10 border-b border-black/10 bg-white/95 px-4 py-3 backdrop-blur dark:border-white/10 dark:bg-neutral-950/95">
-          <h1 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
-            🎬 Watchlist
-          </h1>
-        </header>
+      <DetailProvider>
+        <div className="mx-auto flex min-h-svh max-w-lg flex-col bg-neutral-50 dark:bg-neutral-950">
+          <header className="sticky top-0 z-10 border-b border-black/10 bg-white/95 px-4 py-3 backdrop-blur dark:border-white/10 dark:bg-neutral-950/95">
+            <h1 className="text-base font-bold text-neutral-900 dark:text-neutral-100">
+              🎬 Watchlist
+            </h1>
+          </header>
 
-        <main className="flex-1 overflow-y-auto pb-2">
-          <TabContent tab={tab} />
-        </main>
+          <main className="flex-1 overflow-y-auto pb-2">
+            <TabContent tab={tab} />
+          </main>
 
-        <BottomNav active={tab} onChange={setTab} />
-      </div>
+          <BottomNav active={tab} onChange={setTab} />
+        </div>
+
+        <DetailModal />
+      </DetailProvider>
     </TitlesProvider>
   );
 }

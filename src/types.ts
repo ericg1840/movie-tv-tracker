@@ -10,6 +10,8 @@ export interface Title {
   year: string | null;
   poster_url: string | null;
   plot: string | null;
+  director: string | null;
+  actors: string | null;
   genre: string | null;
   runtime: string | null;
   imdb_rating: string | null;
@@ -38,6 +40,8 @@ export interface OmdbDetail {
   Type: string;
   Poster: string;
   Plot: string;
+  Director: string;
+  Actors: string;
   Genre: string;
   Runtime: string;
   imdbRating: string;

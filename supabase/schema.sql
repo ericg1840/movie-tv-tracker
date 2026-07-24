@@ -9,6 +9,8 @@ create table if not exists public.titles (
   year text,
   poster_url text,
   plot text,
+  director text,
+  actors text,
   genre text,
   runtime text,
   imdb_rating text,
@@ -38,3 +40,4 @@ create policy "anon full access"
   to anon
   using (true)
   with check (true);
+

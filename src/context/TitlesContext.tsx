@@ -10,6 +10,7 @@ import type { Status, Title } from '../types';
 import {
   addTitleByImdbId,
   fetchTitles,
+  refreshTitleDetails,
   removeTitle,
   updateTitleRating,
   updateTitleStatus,
@@ -24,6 +25,7 @@ interface TitlesContextValue {
   setStatus: (id: string, status: Status) => Promise<void>;
   setRating: (id: string, rating: number | null) => Promise<void>;
   remove: (id: string) => Promise<void>;
+  refreshDetails: (id: string) => Promise<void>;
 }
 
 const TitlesContext = createContext<TitlesContextValue | null>(null);
@@ -69,9 +71,29 @@ export function TitlesProvider({ children }: { children: ReactNode }) {
     setTitles((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
+  const refreshDetails = useCallback(
+    async (id: string) => {
+      const title = titles.find((t) => t.id === id);
+      if (!title) return;
+      const updated = await refreshTitleDetails(id, title.imdb_id);
+      setTitles((prev) => prev.map((t) => (t.id === id ? updated : t)));
+    },
+    [titles],
+  );
+
   return (
     <TitlesContext.Provider
-      value={{ titles, loading, error, refresh, addByImdbId, setStatus, setRating, remove }}
+      value={{
+        titles,
+        loading,
+        error,
+        refresh,
+        addByImdbId,
+        setStatus,
+        setRating,
+        remove,
+        refreshDetails,
+      }}
     >
       {children}
     </TitlesContext.Provider>

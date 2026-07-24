@@ -1,6 +1,25 @@
 import { supabase } from './supabase';
 import { getTitleDetail, parseOmdbDate } from './omdb';
-import type { NewTitle, Status, Title } from '../types';
+import type { NewTitle, OmdbDetail, Status, Title } from '../types';
+
+const clean = (value: string | undefined) => (value && value !== 'N/A' ? value : null);
+
+function detailToFields(detail: OmdbDetail) {
+  return {
+    imdb_id: detail.imdbID,
+    title: detail.Title,
+    media_type: (detail.Type === 'series' ? 'series' : 'movie') as Title['media_type'],
+    year: clean(detail.Year),
+    poster_url: clean(detail.Poster),
+    plot: clean(detail.Plot),
+    director: clean(detail.Director),
+    actors: clean(detail.Actors),
+    genre: clean(detail.Genre),
+    runtime: clean(detail.Runtime),
+    imdb_rating: clean(detail.imdbRating),
+    released_on: parseOmdbDate(detail.Released),
+  };
+}
 
 export async function fetchTitles(): Promise<Title[]> {
   const { data, error } = await supabase
@@ -15,17 +34,7 @@ export async function addTitleByImdbId(imdbId: string): Promise<Title> {
   const detail = await getTitleDetail(imdbId);
 
   const newTitle: NewTitle = {
-    imdb_id: detail.imdbID,
-    title: detail.Title,
-    media_type: detail.Type === 'series' ? 'series' : 'movie',
-    year: detail.Year ?? null,
-    poster_url: detail.Poster && detail.Poster !== 'N/A' ? detail.Poster : null,
-    plot: detail.Plot && detail.Plot !== 'N/A' ? detail.Plot : null,
-    genre: detail.Genre && detail.Genre !== 'N/A' ? detail.Genre : null,
-    runtime: detail.Runtime && detail.Runtime !== 'N/A' ? detail.Runtime : null,
-    imdb_rating:
-      detail.imdbRating && detail.imdbRating !== 'N/A' ? detail.imdbRating : null,
-    released_on: parseOmdbDate(detail.Released),
+    ...detailToFields(detail),
     status: 'want_to_watch',
     my_rating: null,
     notes: null,
@@ -44,6 +53,18 @@ export async function addTitleByImdbId(imdbId: string): Promise<Title> {
     }
     throw error;
   }
+  return data;
+}
+
+export async function refreshTitleDetails(id: string, imdbId: string): Promise<Title> {
+  const detail = await getTitleDetail(imdbId);
+  const { data, error } = await supabase
+    .from('titles')
+    .update(detailToFields(detail))
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
   return data;
 }
 

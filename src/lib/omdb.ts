@@ -34,7 +34,7 @@ export async function searchTitles(
 }
 
 export async function getTitleDetail(imdbId: string): Promise<OmdbDetail> {
-  const params = new URLSearchParams({ apikey: apiKey, i: imdbId, plot: 'short' });
+  const params = new URLSearchParams({ apikey: apiKey, i: imdbId, plot: 'full' });
   const res = await fetch(`${BASE_URL}?${params.toString()}`);
   const data: OmdbDetail = await res.json();
 

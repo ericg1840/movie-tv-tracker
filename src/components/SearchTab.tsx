@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { searchTitles } from '../lib/omdb';
 import { useTitles } from '../context/TitlesContext';
+import { useDetail } from '../context/DetailContext';
 import type { OmdbSearchItem } from '../types';
 
 export function SearchTab() {
@@ -11,6 +12,7 @@ export function SearchTab() {
   const [error, setError] = useState<string | null>(null);
   const [addingId, setAddingId] = useState<string | null>(null);
   const { titles, addByImdbId } = useTitles();
+  const { openSearch } = useDetail();
 
   useEffect(() => {
     const q = query.trim();
@@ -96,7 +98,10 @@ export function SearchTab() {
               key={r.imdbID}
               className="flex items-center gap-3 rounded-xl border border-black/10 bg-white p-2 dark:border-white/10 dark:bg-neutral-900"
             >
-              <div className="h-16 w-11 shrink-0 overflow-hidden rounded-md bg-neutral-200 dark:bg-neutral-800">
+              <button
+                onClick={() => openSearch(r)}
+                className="h-16 w-11 shrink-0 overflow-hidden rounded-md bg-neutral-200 dark:bg-neutral-800"
+              >
                 {r.Poster && r.Poster !== 'N/A' ? (
                   <img
                     src={r.Poster}
@@ -107,15 +112,15 @@ export function SearchTab() {
                 ) : (
                   <div className="flex h-full w-full items-center justify-center text-lg">🎬</div>
                 )}
-              </div>
-              <div className="min-w-0 flex-1">
+              </button>
+              <button onClick={() => openSearch(r)} className="min-w-0 flex-1 text-left">
                 <p className="truncate text-sm font-medium text-neutral-900 dark:text-neutral-100">
                   {r.Title}
                 </p>
                 <p className="text-xs text-neutral-500 dark:text-neutral-400">
                   {r.Year} · {r.Type === 'series' ? 'TV' : 'Movie'}
                 </p>
-              </div>
+              </button>
               <button
                 disabled={added || addingId === r.imdbID}
                 onClick={() => handleAdd(r.imdbID)}
