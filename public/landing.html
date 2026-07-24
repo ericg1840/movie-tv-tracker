@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#7e14ff" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>Watchlist — track movies &amp; TV you want to watch</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #fafafa;
+        --panel: #ffffff;
+        --border: rgba(0, 0, 0, 0.08);
+        --text: #18181b;
+        --text-dim: #71717a;
+        --purple: #9333ea;
+        --fuchsia: #c026d3;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0a0a0a;
+          --panel: #18181b;
+          --border: rgba(255, 255, 255, 0.08);
+          --text: #f4f4f5;
+          --text-dim: #a1a1aa;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      .wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      nav.top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 0;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        font-size: 18px;
+      }
+      .brand img {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 22px;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 15px;
+        background: linear-gradient(135deg, var(--purple), var(--fuchsia));
+        color: white;
+        box-shadow: 0 8px 24px rgba(147, 51, 234, 0.35);
+        transition: transform 0.15s ease;
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+      .btn.ghost {
+        background: transparent;
+        color: var(--text);
+        box-shadow: none;
+        border: 1px solid var(--border);
+      }
+
+      .hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 56px 0 40px;
+      }
+      .hero img.icon {
+        width: 96px;
+        height: 96px;
+        border-radius: 24px;
+        box-shadow: 0 16px 40px rgba(147, 51, 234, 0.3);
+        margin-bottom: 24px;
+      }
+      .hero h1 {
+        font-size: clamp(32px, 6vw, 52px);
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        margin: 0 0 16px;
+        max-width: 720px;
+      }
+      .hero h1 .grad {
+        background: linear-gradient(135deg, var(--purple), var(--fuchsia));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .hero p {
+        font-size: 18px;
+        color: var(--text-dim);
+        max-width: 520px;
+        margin: 0 0 32px;
+        line-height: 1.5;
+      }
+      .hero .fineprint {
+        font-size: 13px;
+        color: var(--text-dim);
+        margin-top: 14px;
+      }
+
+      .mock {
+        position: relative;
+        margin: 8px auto 64px;
+        width: 300px;
+      }
+      .mock-frame {
+        border-radius: 32px;
+        border: 8px solid var(--panel);
+        box-shadow:
+          0 24px 60px rgba(0, 0, 0, 0.18),
+          0 0 0 1px var(--border);
+        overflow: hidden;
+        background: var(--bg);
+      }
+      .mock-header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 14px 16px;
+        font-weight: 800;
+        font-size: 14px;
+        border-bottom: 1px solid var(--border);
+      }
+      .mock-card {
+        display: flex;
+        gap: 10px;
+        margin: 12px;
+        padding: 10px;
+        border-radius: 16px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        text-align: left;
+      }
+      .mock-poster {
+        width: 52px;
+        height: 78px;
+        border-radius: 10px;
+        flex-shrink: 0;
+        background: linear-gradient(160deg, var(--purple), var(--fuchsia));
+      }
+      .mock-poster.b {
+        background: linear-gradient(160deg, #f59e0b, #ef4444);
+      }
+      .mock-poster.c {
+        background: linear-gradient(160deg, #0ea5e9, #6366f1);
+      }
+      .mock-body {
+        min-width: 0;
+        flex: 1;
+      }
+      .mock-title {
+        font-weight: 700;
+        font-size: 13px;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .mock-meta {
+        font-size: 11px;
+        color: var(--text-dim);
+        margin-bottom: 8px;
+      }
+      .mock-pill {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        color: white;
+        background: linear-gradient(135deg, var(--purple), var(--fuchsia));
+        padding: 5px 10px;
+        border-radius: 999px;
+      }
+      .mock-count {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 12px;
+        padding: 10px 14px;
+        border-radius: 14px;
+        background: rgba(147, 51, 234, 0.08);
+      }
+      .mock-count b {
+        font-size: 20px;
+        color: var(--purple);
+      }
+      .mock-count span {
+        font-size: 11px;
+        color: var(--text-dim);
+      }
+      .mock-nav {
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0 14px;
+        border-top: 1px solid var(--border);
+        font-size: 10px;
+        color: var(--text-dim);
+      }
+      .mock-nav .active {
+        color: var(--purple);
+        font-weight: 700;
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        padding: 8px 0 72px;
+      }
+      @media (max-width: 760px) {
+        .features {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 480px) {
+        .features {
+          grid-template-columns: 1fr;
+        }
+      }
+      .feature {
+        padding: 24px;
+        border-radius: 20px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+      }
+      .feature .emoji {
+        font-size: 28px;
+        margin-bottom: 12px;
+        display: block;
+      }
+      .feature h3 {
+        font-size: 16px;
+        margin: 0 0 8px;
+      }
+      .feature p {
+        font-size: 14px;
+        color: var(--text-dim);
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 28px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 13px;
+        color: var(--text-dim);
+      }
+      footer a:hover {
+        color: var(--text);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav class="top">
+        <div class="brand">
+          <img src="./icon-192.png" alt="" />
+          Watchlist
+        </div>
+        <a class="btn ghost" href="./">Open App</a>
+      </nav>
+
+      <section class="hero">
+        <img class="icon" src="./icon-512.png" alt="Watchlist app icon" />
+        <h1>Track what to watch.<br /><span class="grad">Discover what's next.</span></h1>
+        <p>
+          A fast, personal movie &amp; TV tracker. Search or browse what's trending, save it to
+          your list, and see a countdown to release day for anything that isn't out yet.
+        </p>
+        <a class="btn" href="./">Open the app →</a>
+        <p class="fineprint">No account, no ads — just your list.</p>
+      </section>
+
+      <div class="mock">
+        <div class="mock-frame">
+          <div class="mock-header">🎬 Watchlist</div>
+
+          <div class="mock-card">
+            <div class="mock-poster"></div>
+            <div class="mock-body">
+              <div class="mock-title">Backrooms</div>
+              <div class="mock-meta">Movie · 2026 · ⭐ 7.0</div>
+              <span class="mock-pill">▶ Start watching</span>
+            </div>
+          </div>
+
+          <div class="mock-count">
+            <b>22</b>
+            <span>days until release<br />Aug 15, 2026</span>
+          </div>
+
+          <div class="mock-card">
+            <div class="mock-poster b"></div>
+            <div class="mock-body">
+              <div class="mock-title">The Odyssey</div>
+              <div class="mock-meta">Movie · 2026 · Adventure</div>
+              <span class="mock-pill">▶ Start watching</span>
+            </div>
+          </div>
+
+          <div class="mock-card">
+            <div class="mock-poster c"></div>
+            <div class="mock-body">
+              <div class="mock-title">Silo</div>
+              <div class="mock-meta">TV · 2023– · ⭐ 8.3</div>
+              <span class="mock-pill">▶ Start watching</span>
+            </div>
+          </div>
+
+          <div class="mock-nav">
+            <span>🔍 Add</span>
+            <span class="active">📺 Watchlist</span>
+            <span>📅 Upcoming</span>
+            <span>✅ Watched</span>
+          </div>
+        </div>
+      </div>
+
+      <section class="features">
+        <div class="feature">
+          <span class="emoji">🔍</span>
+          <h3>Search &amp; discover</h3>
+          <p>Look up any title, or browse what's trending this week — add it in one tap.</p>
+        </div>
+        <div class="feature">
+          <span class="emoji">📺</span>
+          <h3>Watchlist that moves</h3>
+          <p>Want to watch, watching, or watched — with your own 1–10 rating when you finish.</p>
+        </div>
+        <div class="feature">
+          <span class="emoji">📅</span>
+          <h3>Upcoming countdown</h3>
+          <p>Track anything that hasn't come out yet with a live days-until-release counter.</p>
+        </div>
+        <div class="feature">
+          <span class="emoji">🎬</span>
+          <h3>Full details &amp; trailers</h3>
+          <p>Director, cast, synopsis, and the official trailer — right in the app.</p>
+        </div>
+        <div class="feature">
+          <span class="emoji">🍿</span>
+          <h3>Where to watch</h3>
+          <p>See which streaming, rental, and purchase options are available before you commit.</p>
+        </div>
+        <div class="feature">
+          <span class="emoji">📱</span>
+          <h3>Built for every screen</h3>
+          <p>Add it to your phone's home screen, or use the full desktop layout on a bigger screen.</p>
+        </div>
+      </section>
+
+      <footer>
+        <span>Watchlist — a personal project</span>
+        <a href="./">Open the app →</a>
+      </footer>
+    </div>
+  </body>
+</html>
