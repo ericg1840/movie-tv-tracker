@@ -22,10 +22,21 @@ function TabContent({ tab }: { tab: Tab }) {
             (t.status === 'want_to_watch' || t.status === 'watching') &&
             (!t.released_on || t.released_on <= today())
           }
-          sort={(a, b) => {
-            if (a.status !== b.status) return a.status === 'watching' ? -1 : 1;
-            return b.added_at.localeCompare(a.added_at);
-          }}
+          sortOptions={[
+            {
+              label: 'Watching first',
+              fn: (a, b) => {
+                if (a.status !== b.status) return a.status === 'watching' ? -1 : 1;
+                return b.added_at.localeCompare(a.added_at);
+              },
+            },
+            { label: 'Recently added', fn: (a, b) => b.added_at.localeCompare(a.added_at) },
+            { label: 'Title (A–Z)', fn: (a, b) => a.title.localeCompare(b.title) },
+            {
+              label: 'IMDb rating',
+              fn: (a, b) => Number(b.imdb_rating ?? 0) - Number(a.imdb_rating ?? 0),
+            },
+          ]}
         />
       );
     case 'upcoming':
@@ -34,7 +45,13 @@ function TabContent({ tab }: { tab: Tab }) {
           heading="Upcoming releases"
           emptyMessage="No upcoming releases tracked. Search for a title that hasn't come out yet."
           filter={(t) => !!t.released_on && t.released_on > today() && t.status !== 'watched'}
-          sort={(a, b) => (a.released_on ?? '').localeCompare(b.released_on ?? '')}
+          sortOptions={[
+            {
+              label: 'Soonest release',
+              fn: (a, b) => (a.released_on ?? '').localeCompare(b.released_on ?? ''),
+            },
+            { label: 'Title (A–Z)', fn: (a, b) => a.title.localeCompare(b.title) },
+          ]}
         />
       );
     case 'watched':
@@ -43,7 +60,18 @@ function TabContent({ tab }: { tab: Tab }) {
           heading="Watched"
           emptyMessage="Nothing marked as watched yet."
           filter={(t) => t.status === 'watched'}
-          sort={(a, b) => (b.watched_at ?? '').localeCompare(a.watched_at ?? '')}
+          sortOptions={[
+            {
+              label: 'Recently watched',
+              fn: (a, b) => (b.watched_at ?? '').localeCompare(a.watched_at ?? ''),
+            },
+            { label: 'My rating', fn: (a, b) => (b.my_rating ?? -1) - (a.my_rating ?? -1) },
+            {
+              label: 'IMDb rating',
+              fn: (a, b) => Number(b.imdb_rating ?? 0) - Number(a.imdb_rating ?? 0),
+            },
+            { label: 'Title (A–Z)', fn: (a, b) => a.title.localeCompare(b.title) },
+          ]}
         />
       );
   }
@@ -57,11 +85,13 @@ function App() {
       <DetailProvider>
         <div className="flex min-h-svh flex-col bg-neutral-50 dark:bg-neutral-950">
           <header className="sticky top-0 z-10 border-b border-black/10 bg-white/95 px-4 py-3.5 backdrop-blur dark:border-white/10 dark:bg-neutral-950/95">
-            <h1 className="mx-auto flex max-w-6xl items-center gap-1.5 text-lg font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
-              <span>🎬</span>
-              <span className="bg-gradient-to-r from-purple-600 to-fuchsia-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-fuchsia-400">
-                Watchlist
-              </span>
+            <h1 className="mx-auto flex max-w-6xl items-center text-lg font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
+              <a href="./landing.html" className="flex items-center gap-1.5">
+                <span>🎬</span>
+                <span className="bg-gradient-to-r from-purple-600 to-fuchsia-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-fuchsia-400">
+                  Watchlist
+                </span>
+              </a>
             </h1>
           </header>
 
