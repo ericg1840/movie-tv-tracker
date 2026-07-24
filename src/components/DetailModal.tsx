@@ -6,6 +6,7 @@ import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
 import { StatusActions } from './StatusActions';
 import { WatchProviders } from './WatchProviders';
+import { Trailer } from './Trailer';
 
 function Field({ label, value }: { label: string; value: string | null | undefined }) {
   if (!value || value === 'N/A') return null;
@@ -130,6 +131,8 @@ function StoredDetail({ title }: { title: Title }) {
 
   return (
     <ModalShell poster={live.poster_url} title={live.title} badges={badges} onClose={close}>
+      <Trailer imdbId={live.imdb_id} />
+
       <Field label="Genre" value={live.genre} />
       <Field label="Director" value={live.director} />
       <Field label="Starring" value={live.actors} />
@@ -215,6 +218,8 @@ function SearchDetail({ imdbId }: { imdbId: string }) {
       badges={badges}
       onClose={close}
     >
+      <Trailer imdbId={imdbId} />
+
       <Field label="Genre" value={detail.Genre} />
       <Field label="Director" value={detail.Director} />
       <Field label="Starring" value={detail.Actors} />

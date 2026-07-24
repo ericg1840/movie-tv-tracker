@@ -107,3 +107,35 @@ export async function getImdbId(
   const data = await res.json();
   return data.imdb_id || null;
 }
+
+export interface Trailer {
+  key: string;
+  name: string;
+}
+
+interface TmdbVideo {
+  key: string;
+  name: string;
+  site: string;
+  type: string;
+  official?: boolean;
+}
+
+export async function getTrailer(imdbId: string): Promise<Trailer | null> {
+  const target = await findTmdbTarget(imdbId);
+  if (!target) return null;
+
+  const res = await fetch(`${BASE_URL}/${target.mediaType}/${target.id}/videos?api_key=${apiKey}`);
+  if (!res.ok) return null;
+
+  const data = await res.json();
+  const videos: TmdbVideo[] = (data.results ?? []).filter((v: TmdbVideo) => v.site === 'YouTube');
+
+  const trailer =
+    videos.find((v) => v.type === 'Trailer' && v.official) ??
+    videos.find((v) => v.type === 'Trailer') ??
+    videos.find((v) => v.type === 'Teaser') ??
+    videos[0];
+
+  return trailer ? { key: trailer.key, name: trailer.name } : null;
+}
