@@ -1,8 +1,25 @@
 import type { Title } from '../types';
 import { useTitles } from '../context/TitlesContext';
+import { daysUntil, formatDate, todayIso } from '../lib/dates';
 
 export function StatusActions({ title }: { title: Title }) {
   const { setStatus, setRating } = useTitles();
+
+  if (title.released_on && title.released_on > todayIso()) {
+    const days = daysUntil(title.released_on);
+    return (
+      <div className="flex items-center gap-2 rounded-lg bg-purple-50 px-3 py-2 dark:bg-purple-950/40">
+        <span className="text-lg font-bold leading-none text-purple-700 dark:text-purple-300">
+          {days}
+        </span>
+        <span className="text-xs leading-tight text-purple-700 dark:text-purple-300">
+          {days === 1 ? 'day' : 'days'} until release
+          <br />
+          {formatDate(title.released_on)}
+        </span>
+      </div>
+    );
+  }
 
   if (title.status === 'want_to_watch') {
     return (

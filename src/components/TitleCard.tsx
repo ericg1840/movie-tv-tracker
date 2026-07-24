@@ -3,20 +3,9 @@ import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
 import { StatusActions } from './StatusActions';
 
-function formatDate(iso: string | null): string | null {
-  if (!iso) return null;
-  return new Date(iso + 'T00:00:00').toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-}
-
 export function TitleCard({ title }: { title: Title }) {
   const { remove } = useTitles();
   const { openStored } = useDetail();
-  const releaseLabel = formatDate(title.released_on);
-  const isUpcoming = title.released_on ? new Date(title.released_on) > new Date() : false;
 
   return (
     <div className="flex gap-3 rounded-xl border border-black/10 bg-white p-3 shadow-sm dark:border-white/10 dark:bg-neutral-900">
@@ -62,12 +51,6 @@ export function TitleCard({ title }: { title: Title }) {
           {title.runtime && <span>· {title.runtime}</span>}
           {title.imdb_rating && <span>· ⭐ {title.imdb_rating}</span>}
         </div>
-
-        {isUpcoming && releaseLabel && (
-          <p className="text-xs font-medium text-purple-600 dark:text-purple-400">
-            Releases {releaseLabel}
-          </p>
-        )}
 
         {title.genre && (
           <p className="truncate text-xs text-neutral-500 dark:text-neutral-400">{title.genre}</p>

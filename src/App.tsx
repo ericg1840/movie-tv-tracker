@@ -5,8 +5,7 @@ import { BottomNav, type Tab } from './components/BottomNav';
 import { SearchTab } from './components/SearchTab';
 import { ListTab } from './components/ListTab';
 import { DetailModal } from './components/DetailModal';
-
-const today = () => new Date().toISOString().slice(0, 10);
+import { todayIso as today } from './lib/dates';
 
 function TabContent({ tab }: { tab: Tab }) {
   switch (tab) {
