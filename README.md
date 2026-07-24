@@ -2,8 +2,10 @@
 
 A mobile-friendly personal tracker for movies/shows you want to watch, are
 watching, or have watched — plus a view for upcoming releases you're
-looking forward to. Titles are pulled in from [OMDb](https://www.omdbapi.com/)
-and stored in [Supabase](https://supabase.com/). No login: it's just for you.
+looking forward to. Titles are pulled in from [OMDb](https://www.omdbapi.com/),
+streaming availability from [TMDB](https://www.themoviedb.org/)/JustWatch,
+and everything is stored in [Supabase](https://supabase.com/). No login:
+it's just for you.
 
 Built with React + TypeScript + Vite + Tailwind CSS, and deployed to GitHub
 Pages via GitHub Actions.
@@ -27,15 +29,22 @@ Pages via GitHub Actions.
 Sign up for a free key at [omdbapi.com/apikey.aspx](https://www.omdbapi.com/apikey.aspx)
 (1,000 requests/day on the free tier).
 
-## 3. Configure environment variables (local dev)
+## 3. Get a TMDB API key
+
+Used only for the "Where to watch" streaming availability lookup. Create a
+free account at [themoviedb.org](https://www.themoviedb.org), then go to
+**Settings -> API**, request a key (choose "Developer"), and copy the
+**API Key (v3 auth)** value.
+
+## 4. Configure environment variables (local dev)
 
 ```bash
 cp .env.example .env
 ```
 
-Fill in `.env` with your Supabase URL/anon key and OMDb API key.
+Fill in `.env` with your Supabase URL/anon key, OMDb API key, and TMDB API key.
 
-## 4. Run locally
+## 5. Run locally
 
 ```bash
 npm install
@@ -46,16 +55,17 @@ Open the printed local URL. To try it on your phone while developing, run
 `npm run dev -- --host` and open `http://<your-computer's-LAN-IP>:5173` on
 your phone (same Wi-Fi network).
 
-## 5. Deploy to GitHub Pages
+## 6. Deploy to GitHub Pages
 
 1. Push this repo to GitHub.
 2. In the repo, go to **Settings -> Pages** and set **Source** to
    **GitHub Actions**.
-3. Go to **Settings -> Secrets and variables -> Actions** and add three
+3. Go to **Settings -> Secrets and variables -> Actions** and add four
    repository secrets:
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_ANON_KEY`
    - `VITE_OMDB_API_KEY`
+   - `VITE_TMDB_API_KEY`
 4. Push to `main` (or run the "Deploy to GitHub Pages" workflow manually
    from the **Actions** tab). The site builds and deploys automatically —
    the URL will be shown on the **Settings -> Pages** screen and in the
@@ -79,12 +89,15 @@ a quick, app-like way to add titles on the go.
   entries (and release dates) for many not-yet-released movies/shows, so
   searching for something before it's out still works.
 - **Watched**: things you've marked watched, with an optional 1–10 rating.
+- **Where to watch**: tap any title to open its details, including streaming/
+  rental/purchase availability in the US (via TMDB/JustWatch).
 
 ## Project structure
 
 ```
 src/
   lib/omdb.ts        OMDb API calls
+  lib/tmdb.ts          TMDB watch-providers lookup
   lib/supabase.ts     Supabase client
   lib/titles.ts        Supabase reads/writes for the titles table
   context/TitlesContext.tsx  shared app state

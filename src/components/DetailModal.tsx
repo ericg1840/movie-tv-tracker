@@ -4,6 +4,7 @@ import { getTitleDetail } from '../lib/omdb';
 import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
 import { StatusActions } from './StatusActions';
+import { WatchProviders } from './WatchProviders';
 
 function Field({ label, value }: { label: string; value: string | null | undefined }) {
   if (!value || value === 'N/A') return null;
@@ -97,6 +98,8 @@ function StoredDetail({ title }: { title: Title }) {
       <Field label="Starring" value={live.actors} />
       {live.plot && <p className="text-sm text-neutral-700 dark:text-neutral-300">{live.plot}</p>}
 
+      <WatchProviders imdbId={live.imdb_id} />
+
       {missingDetails && (
         <button
           disabled={refreshing}
@@ -181,6 +184,8 @@ function SearchDetail({ imdbId }: { imdbId: string }) {
       {detail.Plot && detail.Plot !== 'N/A' && (
         <p className="text-sm text-neutral-700 dark:text-neutral-300">{detail.Plot}</p>
       )}
+
+      <WatchProviders imdbId={imdbId} />
 
       <button
         disabled={added || adding}
