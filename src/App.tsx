@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { TitlesProvider } from './context/TitlesContext';
 import { DetailProvider } from './context/DetailContext';
-import { BottomNav, type Tab } from './components/BottomNav';
+import { BottomNav } from './components/BottomNav';
+import { Sidebar } from './components/Sidebar';
 import { SearchTab } from './components/SearchTab';
 import { ListTab } from './components/ListTab';
 import { DetailModal } from './components/DetailModal';
 import { todayIso as today } from './lib/dates';
+import type { Tab } from './lib/tabs';
 
 function TabContent({ tab }: { tab: Tab }) {
   switch (tab) {
@@ -53,9 +55,9 @@ function App() {
   return (
     <TitlesProvider>
       <DetailProvider>
-        <div className="mx-auto flex min-h-svh max-w-lg flex-col bg-neutral-50 dark:bg-neutral-950">
+        <div className="flex min-h-svh flex-col bg-neutral-50 dark:bg-neutral-950">
           <header className="sticky top-0 z-10 border-b border-black/10 bg-white/95 px-4 py-3.5 backdrop-blur dark:border-white/10 dark:bg-neutral-950/95">
-            <h1 className="flex items-center gap-1.5 text-lg font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
+            <h1 className="mx-auto flex max-w-6xl items-center gap-1.5 text-lg font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
               <span>🎬</span>
               <span className="bg-gradient-to-r from-purple-600 to-fuchsia-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-fuchsia-400">
                 Watchlist
@@ -63,9 +65,15 @@ function App() {
             </h1>
           </header>
 
-          <main className="flex-1 overflow-y-auto pb-2">
-            <TabContent tab={tab} />
-          </main>
+          <div className="mx-auto flex w-full max-w-6xl flex-1">
+            <Sidebar active={tab} onChange={setTab} />
+
+            <main className="min-w-0 flex-1 overflow-y-auto pb-2">
+              <div className="mx-auto max-w-lg md:max-w-none">
+                <TabContent tab={tab} />
+              </div>
+            </main>
+          </div>
 
           <BottomNav active={tab} onChange={setTab} />
         </div>

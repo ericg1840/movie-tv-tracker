@@ -1,11 +1,4 @@
-export type Tab = 'search' | 'watchlist' | 'upcoming' | 'watched';
-
-const TABS: { id: Tab; label: string; icon: string }[] = [
-  { id: 'search', label: 'Add', icon: '🔍' },
-  { id: 'watchlist', label: 'Watchlist', icon: '📺' },
-  { id: 'upcoming', label: 'Upcoming', icon: '📅' },
-  { id: 'watched', label: 'Watched', icon: '✅' },
-];
+import { TABS, type Tab } from '../lib/tabs';
 
 export function BottomNav({
   active,
@@ -15,7 +8,7 @@ export function BottomNav({
   onChange: (tab: Tab) => void;
 }) {
   return (
-    <nav className="sticky bottom-0 z-10 border-t border-black/10 bg-white/95 backdrop-blur dark:border-white/10 dark:bg-neutral-950/95">
+    <nav className="sticky bottom-0 z-10 border-t border-black/10 bg-white/95 backdrop-blur dark:border-white/10 dark:bg-neutral-950/95 md:hidden">
       <div className="mx-auto flex max-w-lg justify-around gap-1 px-2 py-1.5 pb-[calc(env(safe-area-inset-bottom)+0.375rem)]">
         {TABS.map((tab) => {
           const isActive = active === tab.id;

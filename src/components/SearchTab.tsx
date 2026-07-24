@@ -55,34 +55,36 @@ export function SearchTab() {
         Find a movie or show
       </h1>
 
-      <input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search title..."
-        autoCapitalize="none"
-        className="w-full rounded-2xl border border-black/5 bg-white px-4 py-3 text-base shadow-sm outline-none ring-1 ring-black/[0.02] focus:border-purple-400 dark:border-white/5 dark:bg-neutral-900 dark:text-neutral-100 dark:ring-white/[0.02]"
-      />
+      <div className="flex flex-col gap-3 md:max-w-2xl">
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search title..."
+          autoCapitalize="none"
+          className="w-full rounded-2xl border border-black/5 bg-white px-4 py-3 text-base shadow-sm outline-none ring-1 ring-black/[0.02] focus:border-purple-400 dark:border-white/5 dark:bg-neutral-900 dark:text-neutral-100 dark:ring-white/[0.02]"
+        />
 
-      <div className="flex gap-2 text-sm">
-        {(
-          [
-            [undefined, 'All'],
-            ['movie', 'Movies'],
-            ['series', 'TV'],
-          ] as const
-        ).map(([value, label]) => (
-          <button
-            key={label}
-            onClick={() => setType(value)}
-            className={`rounded-full px-3 py-1 font-medium ${
-              type === value
-                ? 'bg-purple-600 text-white'
-                : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+        <div className="flex gap-2 text-sm">
+          {(
+            [
+              [undefined, 'All'],
+              ['movie', 'Movies'],
+              ['series', 'TV'],
+            ] as const
+          ).map(([value, label]) => (
+            <button
+              key={label}
+              onClick={() => setType(value)}
+              className={`rounded-full px-3 py-1 font-medium ${
+                type === value
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {query.trim().length < 2 && <DiscoverGrid type={type} />}
@@ -93,7 +95,7 @@ export function SearchTab() {
         <p className="text-sm text-neutral-500">No results.</p>
       )}
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 md:max-w-2xl">
         {results.map((r) => {
           const added = addedIds.has(r.imdbID);
           return (
