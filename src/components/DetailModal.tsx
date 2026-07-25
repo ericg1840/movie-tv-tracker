@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import type { OmdbDetail, Title } from '../types';
 import { getTitleDetail } from '../lib/omdb';
 import { getImdbId, posterUrl, type TrendingItem } from '../lib/tmdb';
+import { useBodyScrollLock } from '../lib/useBodyScrollLock';
 import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
 import { StatusActions } from './StatusActions';
@@ -53,14 +54,24 @@ function ModalShell({
   onClose: () => void;
   children: ReactNode;
 }) {
+  useBodyScrollLock();
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [onClose]);
+
   return (
     <div
-      className="fixed inset-0 z-20 flex items-end justify-center bg-black/60 sm:items-center"
+      className="fixed inset-0 z-20 flex items-end justify-center overscroll-contain bg-black/60 sm:items-center"
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[88vh] w-full max-w-lg flex-col overflow-y-auto rounded-t-3xl bg-white dark:bg-neutral-900 sm:rounded-3xl"
+        className="flex max-h-[88dvh] w-full max-w-lg flex-col overflow-y-auto overscroll-contain rounded-t-3xl bg-white dark:bg-neutral-900 sm:rounded-3xl"
       >
         <div className="relative h-40 shrink-0 overflow-hidden bg-neutral-200 dark:bg-neutral-800">
           {poster && (

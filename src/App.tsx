@@ -83,7 +83,7 @@ function App() {
   return (
     <TitlesProvider>
       <DetailProvider>
-        <div className="flex min-h-svh flex-col bg-neutral-50 dark:bg-neutral-950">
+        <div className="flex min-h-dvh flex-col bg-neutral-50 dark:bg-neutral-950">
           <header className="sticky top-0 z-10 border-b border-black/10 bg-white/95 px-4 py-3.5 backdrop-blur dark:border-white/10 dark:bg-neutral-950/95">
             <h1 className="mx-auto flex max-w-6xl items-center text-lg font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
               <a href="./landing.html" className="flex items-center gap-1.5">
@@ -98,7 +98,7 @@ function App() {
           <div className="mx-auto flex w-full max-w-6xl flex-1">
             <Sidebar active={tab} onChange={setTab} />
 
-            <main className="min-w-0 flex-1 overflow-y-auto pb-2">
+            <main className="min-w-0 flex-1 pb-2">
               <div className="mx-auto max-w-lg md:max-w-none">
                 <TabContent tab={tab} />
               </div>

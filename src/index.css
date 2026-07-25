@@ -4,15 +4,10 @@
   color-scheme: light dark;
 }
 
-html,
-body,
-#root {
-  height: 100%;
-}
-
 body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Stop iOS rubber-banding the whole page past its ends. */
   overscroll-behavior-y: none;
 }

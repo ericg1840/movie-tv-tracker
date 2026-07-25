@@ -8,7 +8,7 @@ export function Sidebar({
   onChange: (tab: Tab) => void;
 }) {
   return (
-    <nav className="sticky top-[57px] hidden h-[calc(100svh-57px)] w-56 shrink-0 flex-col gap-1 border-r border-black/10 p-3 dark:border-white/10 md:flex">
+    <nav className="sticky top-[57px] hidden h-[calc(100dvh-57px)] w-56 shrink-0 flex-col gap-1 border-r border-black/10 p-3 dark:border-white/10 md:flex">
       {TABS.map((tab) => {
         const isActive = active === tab.id;
         return (
