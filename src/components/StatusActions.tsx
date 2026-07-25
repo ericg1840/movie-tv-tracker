@@ -8,11 +8,11 @@ export function StatusActions({ title }: { title: Title }) {
   if (title.released_on && title.released_on > todayIso()) {
     const days = daysUntil(title.released_on);
     return (
-      <div className="flex items-center gap-2 rounded-lg bg-purple-50 px-3 py-2 dark:bg-purple-950/40">
-        <span className="text-lg font-bold leading-none text-purple-700 dark:text-purple-300">
+      <div className="flex items-center gap-2 rounded-lg bg-accent-50 px-3 py-2 dark:bg-accent-950/50">
+        <span className="text-lg font-bold leading-none text-accent-700 dark:text-accent-400">
           {days}
         </span>
-        <span className="text-xs leading-tight text-purple-700 dark:text-purple-300">
+        <span className="text-xs leading-tight text-accent-700 dark:text-accent-400">
           {days === 1 ? 'day' : 'days'} until release
           <br />
           {formatDate(title.released_on)}
@@ -26,7 +26,7 @@ export function StatusActions({ title }: { title: Title }) {
       <div className="flex flex-wrap items-center gap-2">
         <button
           onClick={() => setStatus(title.id, 'watching')}
-          className="rounded-full bg-purple-600 px-3 py-1 text-xs font-medium text-white hover:bg-purple-700"
+          className="rounded-full bg-brand-700 px-3 py-1 text-xs font-medium text-white hover:bg-brand-800"
         >
           ▶ Start watching
         </button>
@@ -43,12 +43,12 @@ export function StatusActions({ title }: { title: Title }) {
   if (title.status === 'watching') {
     return (
       <div className="flex flex-wrap items-center gap-2">
-        <span className="rounded-full bg-purple-100 px-2 py-1 text-xs font-medium text-purple-700 dark:bg-purple-900/40 dark:text-purple-300">
+        <span className="rounded-full bg-brand-100 px-2 py-1 text-xs font-medium text-brand-800 dark:bg-brand-900/40 dark:text-brand-300">
           Watching
         </span>
         <button
           onClick={() => setStatus(title.id, 'watched')}
-          className="rounded-full bg-purple-600 px-3 py-1 text-xs font-medium text-white hover:bg-purple-700"
+          className="rounded-full bg-brand-700 px-3 py-1 text-xs font-medium text-white hover:bg-brand-800"
         >
           ✓ Mark watched
         </button>

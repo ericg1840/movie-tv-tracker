@@ -1,3 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <text x="50" y="72" font-size="72" text-anchor="middle">🎬</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <clipPath id="disc">
+      <circle cx="256" cy="256" r="186"/>
+    </clipPath>
+  </defs>
+
+  <rect width="512" height="512" fill="#0B2F3F"/>
+  <circle cx="256" cy="256" r="186" fill="#2DD4C4"/>
+
+  <g clip-path="url(#disc)">
+    <!-- play triangle, corners rounded by a matching stroke -->
+    <path d="M202 152 L402 256 L202 366 Z"
+          fill="#0B2F3F" stroke="#0B2F3F" stroke-width="34" stroke-linejoin="round"/>
+
+    <!-- teal checkmark carving the triangle into play + check -->
+    <path d="M168 244 L242 326 L420 140"
+          fill="none" stroke="#2DD4C4" stroke-width="44"
+          stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- coral accent at the tip of the lower wedge -->
+    <path d="M340 238 L374 260 L340 282 Z"
+          fill="#FF6B6B" stroke="#FF6B6B" stroke-width="14" stroke-linejoin="round"/>
+  </g>
 </svg>

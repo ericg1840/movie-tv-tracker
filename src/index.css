@@ -1,7 +1,33 @@
 @import "tailwindcss";
 
-:root {
-  color-scheme: light dark;
+/*
+ * Brand palette, taken from the app icon: teal disc, navy field, coral accent.
+ * brand-400 and accent-500 are the exact icon colors; the darker brand shades
+ * exist so solid buttons keep white text legible on light backgrounds.
+ */
+@theme {
+  --color-brand-50: #ecfdfa;
+  --color-brand-100: #d0faf3;
+  --color-brand-200: #a5f3e9;
+  --color-brand-300: #6ee7db;
+  --color-brand-400: #2dd4c4;
+  --color-brand-500: #14b8a6;
+  --color-brand-600: #0d9488;
+  --color-brand-700: #0f766e;
+  --color-brand-800: #115e59;
+  --color-brand-900: #134e4a;
+  --color-brand-950: #042f2e;
+
+  --color-accent-50: #fff1f1;
+  --color-accent-100: #ffdcdc;
+  --color-accent-400: #ff8787;
+  --color-accent-500: #ff6b6b;
+  --color-accent-600: #f03e3e;
+  --color-accent-700: #c92a2a;
+  --color-accent-900: #6b1d1d;
+  --color-accent-950: #3d0f0f;
+
+  --color-ink-950: #0b2f3f;
 }
 
 body {

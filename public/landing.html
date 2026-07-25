@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#7e14ff" />
+    <meta name="theme-color" content="#0B2F3F" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <title>Watchlist — track movies &amp; TV you want to watch</title>
     <style>
@@ -14,8 +14,9 @@
         --border: rgba(0, 0, 0, 0.08);
         --text: #18181b;
         --text-dim: #71717a;
-        --purple: #9333ea;
-        --fuchsia: #c026d3;
+        --brand: #0d9488;
+        --brand-light: #2dd4c4;
+        --accent: #ff6b6b;
       }
       @media (prefers-color-scheme: dark) {
         :root {
@@ -24,6 +25,9 @@
           --border: rgba(255, 255, 255, 0.08);
           --text: #f4f4f5;
           --text-dim: #a1a1aa;
+          /* the vibrant icon teal reads better against dark than the button shade */
+          --brand: #2dd4c4;
+          --brand-light: #6ee7db;
         }
       }
       * {
@@ -74,9 +78,9 @@
         border-radius: 999px;
         font-weight: 600;
         font-size: 15px;
-        background: linear-gradient(135deg, var(--purple), var(--fuchsia));
+        background: linear-gradient(135deg, var(--brand), var(--brand-light));
         color: white;
-        box-shadow: 0 8px 24px rgba(147, 51, 234, 0.35);
+        box-shadow: 0 8px 24px rgba(13, 148, 136, 0.35);
         transition: transform 0.15s ease;
       }
       .btn:hover {
@@ -100,7 +104,7 @@
         width: 96px;
         height: 96px;
         border-radius: 24px;
-        box-shadow: 0 16px 40px rgba(147, 51, 234, 0.3);
+        box-shadow: 0 16px 40px rgba(13, 148, 136, 0.3);
         margin-bottom: 24px;
       }
       .hero h1 {
@@ -111,7 +115,7 @@
         max-width: 720px;
       }
       .hero h1 .grad {
-        background: linear-gradient(135deg, var(--purple), var(--fuchsia));
+        background: linear-gradient(135deg, var(--brand), var(--brand-light));
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
@@ -168,7 +172,7 @@
         height: 78px;
         border-radius: 10px;
         flex-shrink: 0;
-        background: linear-gradient(160deg, var(--purple), var(--fuchsia));
+        background: linear-gradient(160deg, var(--brand), var(--accent));
       }
       .mock-poster.b {
         background: linear-gradient(160deg, #f59e0b, #ef4444);
@@ -198,7 +202,7 @@
         font-size: 10px;
         font-weight: 700;
         color: white;
-        background: linear-gradient(135deg, var(--purple), var(--fuchsia));
+        background: linear-gradient(135deg, var(--brand), var(--brand-light));
         padding: 5px 10px;
         border-radius: 999px;
       }
@@ -209,11 +213,11 @@
         margin: 12px;
         padding: 10px 14px;
         border-radius: 14px;
-        background: rgba(147, 51, 234, 0.08);
+        background: rgba(255, 107, 107, 0.10);
       }
       .mock-count b {
         font-size: 20px;
-        color: var(--purple);
+        color: var(--accent);
       }
       .mock-count span {
         font-size: 11px;
@@ -227,9 +231,27 @@
         font-size: 10px;
         color: var(--text-dim);
       }
+      .mock-nav span {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+      }
+      .mock-nav .ic {
+        width: 14px;
+        height: 14px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.9;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
       .mock-nav .active {
-        color: var(--purple);
+        color: var(--brand);
         font-weight: 700;
+      }
+      .mock-nav .active .ic {
+        stroke-width: 2.4;
       }
 
       .features {
@@ -255,9 +277,15 @@
         border: 1px solid var(--border);
       }
       .feature .emoji {
-        font-size: 28px;
-        margin-bottom: 12px;
+        width: 26px;
+        height: 26px;
+        margin-bottom: 14px;
         display: block;
+        fill: none;
+        stroke: var(--brand);
+        stroke-width: 1.75;
+        stroke-linecap: round;
+        stroke-linejoin: round;
       }
       .feature h3 {
         font-size: 16px;
@@ -307,7 +335,10 @@
 
       <div class="mock">
         <div class="mock-frame">
-          <div class="mock-header">🎬 Watchlist</div>
+          <div class="mock-header">
+            <img src="./favicon.svg" alt="" width="16" height="16" style="border-radius: 4px" />
+            Watchlist
+          </div>
 
           <div class="mock-card">
             <div class="mock-poster"></div>
@@ -342,42 +373,42 @@
           </div>
 
           <div class="mock-nav">
-            <span>🔍 Add</span>
-            <span class="active">📺 Watchlist</span>
-            <span>📅 Upcoming</span>
-            <span>✅ Watched</span>
+            <span><svg class="ic" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.75"/><path d="M15.6 15.6 20.5 20.5"/></svg>Add</span>
+            <span class="active"><svg class="ic" viewBox="0 0 24 24"><path d="M6.25 3.75h11.5a.75.75 0 0 1 .75.75v15.75l-6.5-3.75-6.5 3.75V4.5a.75.75 0 0 1 .75-.75Z"/></svg>Watchlist</span>
+            <span><svg class="ic" viewBox="0 0 24 24"><rect x="3.25" y="5.25" width="17.5" height="15.5" rx="2.25"/><path d="M3.25 9.75h17.5M8 3.25v4M16 3.25v4"/></svg>Upcoming</span>
+            <span><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.75"/><path d="m8.25 12.25 2.75 2.75 4.75-5.5"/></svg>Watched</span>
           </div>
         </div>
       </div>
 
       <section class="features">
         <div class="feature">
-          <span class="emoji">🔍</span>
+          <svg class="emoji" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.75"/><path d="M15.6 15.6 20.5 20.5"/></svg>
           <h3>Search &amp; discover</h3>
           <p>Look up any title, or browse what's trending this week — add it in one tap.</p>
         </div>
         <div class="feature">
-          <span class="emoji">📺</span>
+          <svg class="emoji" viewBox="0 0 24 24"><path d="M6.25 3.75h11.5a.75.75 0 0 1 .75.75v15.75l-6.5-3.75-6.5 3.75V4.5a.75.75 0 0 1 .75-.75Z"/></svg>
           <h3>Watchlist that moves</h3>
           <p>Want to watch, watching, or watched — with your own 1–10 rating when you finish.</p>
         </div>
         <div class="feature">
-          <span class="emoji">📅</span>
+          <svg class="emoji" viewBox="0 0 24 24"><rect x="3.25" y="5.25" width="17.5" height="15.5" rx="2.25"/><path d="M3.25 9.75h17.5M8 3.25v4M16 3.25v4"/></svg>
           <h3>Upcoming countdown</h3>
           <p>Track anything that hasn't come out yet with a live days-until-release counter.</p>
         </div>
         <div class="feature">
-          <span class="emoji">🎬</span>
+          <svg class="emoji" viewBox="0 0 24 24"><rect x="3.25" y="4.25" width="17.5" height="15.5" rx="2.25"/><path d="M8.25 4.25v15.5M15.75 4.25v15.5M3.25 12h17.5M3.25 8.25h5M3.25 15.75h5M15.75 8.25h5M15.75 15.75h5"/></svg>
           <h3>Full details &amp; trailers</h3>
           <p>Director, cast, synopsis, and the official trailer — right in the app.</p>
         </div>
         <div class="feature">
-          <span class="emoji">🍿</span>
+          <svg class="emoji" viewBox="0 0 24 24"><rect x="2.75" y="4.75" width="18.5" height="12.5" rx="2.25"/><path d="M8.5 20.75h7M12 17.25v3.5M10.25 8.75 14.5 11l-4.25 2.25Z"/></svg>
           <h3>Where to watch</h3>
           <p>See which streaming, rental, and purchase options are available before you commit.</p>
         </div>
         <div class="feature">
-          <span class="emoji">📱</span>
+          <svg class="emoji" viewBox="0 0 24 24"><rect x="2.5" y="5.25" width="12.5" height="9.5" rx="1.75"/><rect x="16.5" y="9.75" width="5" height="10.5" rx="1.5"/><path d="M6.5 18.75h5"/></svg>
           <h3>Built for every screen</h3>
           <p>Add it to your phone's home screen, or use the full desktop layout on a bigger screen.</p>
         </div>

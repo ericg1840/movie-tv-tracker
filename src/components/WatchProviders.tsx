@@ -60,7 +60,7 @@ export function WatchProviders({ imdbId }: { imdbId: string }) {
         href={data.link}
         target="_blank"
         rel="noreferrer"
-        className="text-xs text-purple-600 hover:underline dark:text-purple-400"
+        className="text-xs text-brand-700 hover:underline dark:text-brand-400"
       >
         More info on JustWatch
       </a>

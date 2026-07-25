@@ -87,8 +87,8 @@ function App() {
           <header className="sticky top-0 z-10 border-b border-black/10 bg-white/95 px-4 py-3.5 backdrop-blur dark:border-white/10 dark:bg-neutral-950/95">
             <h1 className="mx-auto flex max-w-6xl items-center text-lg font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
               <a href="./landing.html" className="flex items-center gap-1.5">
-                <span>🎬</span>
-                <span className="bg-gradient-to-r from-purple-600 to-fuchsia-500 bg-clip-text text-transparent dark:from-purple-400 dark:to-fuchsia-400">
+                <img src="./favicon.svg" alt="" className="h-6 w-6 rounded-md" />
+                <span className="bg-gradient-to-r from-brand-700 to-brand-500 bg-clip-text text-transparent dark:from-brand-400 dark:to-brand-200">
                   Watchlist
                 </span>
               </a>

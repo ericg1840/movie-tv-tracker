@@ -3,6 +3,7 @@ import { searchTitles } from '../lib/omdb';
 import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
 import { DiscoverGrid } from './DiscoverGrid';
+import { Icon } from './Icon';
 import type { OmdbSearchItem } from '../types';
 
 export function SearchTab() {
@@ -61,7 +62,7 @@ export function SearchTab() {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search title..."
           autoCapitalize="none"
-          className="w-full rounded-2xl border border-black/5 bg-white px-4 py-3 text-base shadow-sm outline-none ring-1 ring-black/[0.02] focus:border-purple-400 dark:border-white/5 dark:bg-neutral-900 dark:text-neutral-100 dark:ring-white/[0.02]"
+          className="w-full rounded-2xl border border-black/5 bg-white px-4 py-3 text-base shadow-sm outline-none ring-1 ring-black/[0.02] focus:border-brand-400 dark:border-white/5 dark:bg-neutral-900 dark:text-neutral-100 dark:ring-white/[0.02]"
         />
 
         <div className="flex gap-2 text-sm">
@@ -77,7 +78,7 @@ export function SearchTab() {
               onClick={() => setType(value)}
               className={`rounded-full px-3 py-1 font-medium ${
                 type === value
-                  ? 'bg-purple-600 text-white'
+                  ? 'bg-brand-700 text-white'
                   : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300'
               }`}
             >
@@ -115,7 +116,9 @@ export function SearchTab() {
                     loading="lazy"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center text-lg">🎬</div>
+                  <div className="flex h-full w-full items-center justify-center text-neutral-400">
+                    <Icon name="film" className="h-5 w-5" />
+                  </div>
                 )}
               </button>
               <button onClick={() => openSearch(r)} className="min-w-0 flex-1 text-left">
@@ -129,7 +132,7 @@ export function SearchTab() {
               <button
                 disabled={added || addingId === r.imdbID}
                 onClick={() => handleAdd(r.imdbID)}
-                className="shrink-0 rounded-full bg-purple-600 px-3 py-1.5 text-xs font-medium text-white disabled:bg-neutral-300 disabled:text-neutral-500 dark:disabled:bg-neutral-700"
+                className="shrink-0 rounded-full bg-brand-700 px-3 py-1.5 text-xs font-medium text-white disabled:bg-neutral-300 disabled:text-neutral-500 dark:disabled:bg-neutral-700"
               >
                 {added ? 'Added ✓' : addingId === r.imdbID ? 'Adding...' : 'Add'}
               </button>

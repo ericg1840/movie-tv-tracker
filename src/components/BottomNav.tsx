@@ -1,3 +1,4 @@
+import { Icon } from './Icon';
 import { TABS, type Tab } from '../lib/tabs';
 
 export function BottomNav({
@@ -16,15 +17,13 @@ export function BottomNav({
             <button
               key={tab.id}
               onClick={() => onChange(tab.id)}
-              className={`flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-[11px] font-medium transition-colors ${
+              className={`flex flex-1 flex-col items-center gap-1 rounded-xl py-1.5 text-[11px] font-medium transition-colors ${
                 isActive
-                  ? 'bg-purple-50 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400'
+                  ? 'bg-brand-50 text-brand-600 dark:bg-brand-950/50 dark:text-brand-400'
                   : 'text-neutral-500 dark:text-neutral-400'
               }`}
             >
-              <span className={`leading-none transition-transform ${isActive ? 'scale-110 text-xl' : 'text-lg'}`}>
-                {tab.icon}
-              </span>
+              <Icon name={tab.icon} strokeWidth={isActive ? 2.25 : 1.75} className="h-5 w-5" />
               {tab.label}
             </button>
           );

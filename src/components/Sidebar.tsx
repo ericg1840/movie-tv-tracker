@@ -1,3 +1,4 @@
+import { Icon } from './Icon';
 import { TABS, type Tab } from '../lib/tabs';
 
 export function Sidebar({
@@ -17,11 +18,11 @@ export function Sidebar({
             onClick={() => onChange(tab.id)}
             className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
               isActive
-                ? 'bg-purple-50 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400'
+                ? 'bg-brand-50 text-brand-600 dark:bg-brand-950/50 dark:text-brand-400'
                 : 'text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-900'
             }`}
           >
-            <span className="text-lg leading-none">{tab.icon}</span>
+            <Icon name={tab.icon} strokeWidth={isActive ? 2.25 : 1.75} className="h-5 w-5" />
             {tab.label}
           </button>
         );

@@ -8,6 +8,7 @@ import { useDetail } from '../context/DetailContext';
 import { StatusActions } from './StatusActions';
 import { WatchProviders } from './WatchProviders';
 import { Trailer } from './Trailer';
+import { Icon } from './Icon';
 
 function Field({ label, value }: { label: string; value: string | null | undefined }) {
   if (!value || value === 'N/A') return null;
@@ -32,7 +33,7 @@ function ExpandablePlot({ text }: { text: string }) {
       {isLong && (
         <button
           onClick={() => setExpanded((e) => !e)}
-          className="font-medium text-purple-600 hover:underline dark:text-purple-400"
+          className="font-medium text-brand-700 hover:underline dark:text-brand-400"
         >
           {expanded ? 'Show less' : 'Show more'}
         </button>
@@ -97,7 +98,9 @@ function ModalShell({
               {poster ? (
                 <img src={poster} alt={title} className="h-full w-full object-cover" />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-3xl">🎬</div>
+                <div className="flex h-full w-full items-center justify-center text-neutral-400">
+                  <Icon name="film" className="h-8 w-8" />
+                </div>
               )}
             </div>
             <div className="flex min-w-0 flex-col gap-0.5 pb-1">
@@ -162,7 +165,7 @@ function StoredDetail({ title }: { title: Title }) {
               setRefreshing(false);
             }
           }}
-          className="self-start text-xs font-medium text-purple-600 hover:underline disabled:opacity-50 dark:text-purple-400"
+          className="self-start text-xs font-medium text-brand-700 hover:underline disabled:opacity-50 dark:text-brand-400"
         >
           {refreshing ? 'Loading details…' : 'Load director & cast'}
         </button>
@@ -248,7 +251,7 @@ function SearchDetail({ imdbId }: { imdbId: string }) {
             setAdding(false);
           }
         }}
-        className="mt-2 self-start rounded-full bg-purple-600 px-4 py-1.5 text-xs font-medium text-white disabled:bg-neutral-300 disabled:text-neutral-500 dark:disabled:bg-neutral-700"
+        className="mt-2 self-start rounded-full bg-brand-700 px-4 py-1.5 text-xs font-medium text-white disabled:bg-neutral-300 disabled:text-neutral-500 dark:disabled:bg-neutral-700"
       >
         {added ? 'Added ✓' : adding ? 'Adding…' : 'Add to Watchlist'}
       </button>

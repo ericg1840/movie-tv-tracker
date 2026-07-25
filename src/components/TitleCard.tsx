@@ -2,6 +2,7 @@ import type { Title } from '../types';
 import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
 import { StatusActions } from './StatusActions';
+import { Icon } from './Icon';
 
 export function TitleCard({ title }: { title: Title }) {
   const { remove } = useTitles();
@@ -22,7 +23,9 @@ export function TitleCard({ title }: { title: Title }) {
             loading="lazy"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-3xl">🎬</div>
+          <div className="flex h-full w-full items-center justify-center text-neutral-400">
+            <Icon name="film" className="h-7 w-7" />
+          </div>
         )}
       </button>
 
@@ -44,7 +47,7 @@ export function TitleCard({ title }: { title: Title }) {
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
-          <span className="rounded-full bg-purple-50 px-2 py-0.5 font-medium text-purple-700 dark:bg-purple-950/50 dark:text-purple-300">
+          <span className="rounded-full bg-brand-50 px-2 py-0.5 font-medium text-brand-800 dark:bg-brand-950/50 dark:text-brand-300">
             {title.media_type === 'series' ? 'TV' : 'Movie'}
           </span>
           {title.year && <span>{title.year}</span>}

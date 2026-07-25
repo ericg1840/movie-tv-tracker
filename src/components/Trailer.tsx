@@ -44,7 +44,7 @@ export function Trailer({ imdbId }: { imdbId: string }) {
             className="absolute inset-0 h-full w-full object-cover opacity-80"
             loading="lazy"
           />
-          <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-white/90 text-2xl text-purple-700 shadow-lg">
+          <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-white/90 text-2xl text-brand-800 shadow-lg">
             ▶
           </span>
         </button>

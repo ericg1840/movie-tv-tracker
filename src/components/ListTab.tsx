@@ -52,7 +52,7 @@ export function ListTab({
         <button
           onClick={() => refresh()}
           aria-label="Refresh"
-          className="text-neutral-400 hover:text-purple-600"
+          className="text-neutral-400 hover:text-brand-700"
         >
           ↻
         </button>
@@ -85,7 +85,7 @@ export function ListTab({
                 onClick={() => setTypeFilter(value)}
                 className={`rounded-full px-3 py-1.5 font-medium ${
                   typeFilter === value
-                    ? 'bg-purple-600 text-white'
+                    ? 'bg-brand-700 text-white'
                     : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300'
                 }`}
               >

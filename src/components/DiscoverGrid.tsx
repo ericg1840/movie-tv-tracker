@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getTrending, posterUrl, type TrendingItem } from '../lib/tmdb';
 import { useDetail } from '../context/DetailContext';
+import { Icon } from './Icon';
 
 export function DiscoverGrid({ type }: { type?: 'movie' | 'series' }) {
   const [items, setItems] = useState<TrendingItem[]>([]);
@@ -48,7 +49,9 @@ export function DiscoverGrid({ type }: { type?: 'movie' | 'series' }) {
                   loading="lazy"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-2xl">🎬</div>
+                <div className="flex h-full w-full items-center justify-center text-neutral-400">
+                  <Icon name="film" className="h-7 w-7" />
+                </div>
               )}
             </div>
             <p className="truncate text-xs font-medium text-neutral-900 dark:text-neutral-100">
