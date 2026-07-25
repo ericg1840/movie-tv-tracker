@@ -42,6 +42,42 @@ function ExpandablePlot({ text }: { text: string }) {
   );
 }
 
+function NotesField({ title }: { title: Title }) {
+  const { setNotes } = useTitles();
+  const [value, setValue] = useState(title.notes ?? '');
+  const [saving, setSaving] = useState(false);
+
+  async function handleBlur() {
+    const normalized = value.trim() || null;
+    if (normalized === (title.notes ?? null)) return;
+    setSaving(true);
+    try {
+      await setNotes(title.id, normalized);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-center justify-between">
+        <label className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
+          Notes
+        </label>
+        {saving && <span className="text-xs text-neutral-400">Saving…</span>}
+      </div>
+      <textarea
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={handleBlur}
+        placeholder="Why you want to watch it, where you left off…"
+        rows={3}
+        className="w-full resize-none rounded-2xl border border-black/5 bg-white px-3 py-2 text-sm text-neutral-800 shadow-sm outline-none ring-1 ring-black/[0.02] focus:border-brand-400 dark:border-white/5 dark:bg-neutral-950/40 dark:text-neutral-100 dark:ring-white/[0.02]"
+      />
+    </div>
+  );
+}
+
 function ModalShell({
   poster,
   title,
@@ -163,6 +199,8 @@ function StoredDetail({ title }: { title: Title }) {
       {live.plot && <ExpandablePlot text={live.plot} />}
 
       <WatchProviders imdbId={live.imdb_id} />
+
+      <NotesField title={live} />
 
       {missingDetails && (
         <button

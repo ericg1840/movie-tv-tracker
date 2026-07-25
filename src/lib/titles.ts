@@ -94,6 +94,17 @@ export async function updateTitleRating(id: string, myRating: number | null): Pr
   return data;
 }
 
+export async function updateTitleNotes(id: string, notes: string | null): Promise<Title> {
+  const { data, error } = await supabase
+    .from('titles')
+    .update({ notes })
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
 export async function removeTitle(id: string): Promise<void> {
   const { error } = await supabase.from('titles').delete().eq('id', id);
   if (error) throw error;

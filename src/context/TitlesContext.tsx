@@ -12,6 +12,7 @@ import {
   fetchTitles,
   refreshTitleDetails,
   removeTitle,
+  updateTitleNotes,
   updateTitleRating,
   updateTitleStatus,
 } from '../lib/titles';
@@ -24,6 +25,7 @@ interface TitlesContextValue {
   addByImdbId: (imdbId: string) => Promise<void>;
   setStatus: (id: string, status: Status) => Promise<void>;
   setRating: (id: string, rating: number | null) => Promise<void>;
+  setNotes: (id: string, notes: string | null) => Promise<void>;
   remove: (id: string) => Promise<void>;
   refreshDetails: (id: string) => Promise<void>;
 }
@@ -66,6 +68,11 @@ export function TitlesProvider({ children }: { children: ReactNode }) {
     setTitles((prev) => prev.map((t) => (t.id === id ? updated : t)));
   }, []);
 
+  const setNotes = useCallback(async (id: string, notes: string | null) => {
+    const updated = await updateTitleNotes(id, notes);
+    setTitles((prev) => prev.map((t) => (t.id === id ? updated : t)));
+  }, []);
+
   const remove = useCallback(async (id: string) => {
     await removeTitle(id);
     setTitles((prev) => prev.filter((t) => t.id !== id));
@@ -91,6 +98,7 @@ export function TitlesProvider({ children }: { children: ReactNode }) {
         addByImdbId,
         setStatus,
         setRating,
+        setNotes,
         remove,
         refreshDetails,
       }}
