@@ -72,19 +72,29 @@ function ModalShell({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[88dvh] w-full max-w-lg flex-col overflow-y-auto overscroll-contain rounded-t-3xl bg-white dark:bg-neutral-900 sm:rounded-3xl"
+        className="relative flex max-h-[88dvh] w-full max-w-lg flex-col overflow-y-auto overscroll-contain rounded-t-3xl bg-white dark:bg-neutral-900 sm:rounded-3xl"
       >
-        <div className="relative h-40 shrink-0 overflow-hidden bg-neutral-200 dark:bg-neutral-800">
-          {poster && (
+        {/*
+         * Blurred poster wash. It's absolutely positioned inside the scroll
+         * container so it scrolls away with the content, and it runs well past
+         * the header so the artwork dissolves into the panel gradually instead
+         * of stopping at a hard edge partway down.
+         */}
+        {poster && (
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-[26rem] overflow-hidden"
+          >
             <img
               src={poster}
               alt=""
-              aria-hidden="true"
-              className="h-full w-full scale-110 object-cover opacity-50 blur-md"
+              className="h-full w-full scale-125 object-cover opacity-45 blur-2xl"
             />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent dark:from-neutral-900 dark:via-neutral-900/60" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/60 to-white dark:via-neutral-900/60 dark:to-neutral-900" />
+          </div>
+        )}
 
+        <div className="relative h-40 shrink-0">
           <button
             onClick={onClose}
             aria-label="Close"
@@ -114,7 +124,7 @@ function ModalShell({
           </div>
         </div>
 
-        <div className="flex flex-col gap-2.5 p-4">{children}</div>
+        <div className="relative flex flex-col gap-2.5 p-4">{children}</div>
       </div>
     </div>
   );
