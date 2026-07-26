@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export type IconName = 'search' | 'bookmark' | 'calendar' | 'check' | 'film' | 'dice';
+export type IconName = 'search' | 'bookmark' | 'calendar' | 'check' | 'film' | 'dice' | 'chart';
 
 const PATHS: Record<IconName, ReactNode> = {
   search: (
@@ -36,6 +36,12 @@ const PATHS: Record<IconName, ReactNode> = {
       <circle cx="12" cy="12" r="1.15" fill="currentColor" stroke="none" />
       <circle cx="8" cy="16" r="1.15" fill="currentColor" stroke="none" />
       <circle cx="16" cy="16" r="1.15" fill="currentColor" stroke="none" />
+    </>
+  ),
+  chart: (
+    <>
+      <path d="M4.25 3.25v16.5h16.5" />
+      <path d="M8 19.75v-6M12.5 19.75v-9.5M17 19.75v-4" />
     </>
   ),
 };

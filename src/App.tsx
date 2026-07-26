@@ -6,6 +6,7 @@ import { Sidebar } from './components/Sidebar';
 import { SearchTab } from './components/SearchTab';
 import { ListTab } from './components/ListTab';
 import { DetailModal } from './components/DetailModal';
+import { StatsTab } from './components/StatsTab';
 import { todayIso as today } from './lib/dates';
 import type { Tab } from './lib/tabs';
 
@@ -75,6 +76,8 @@ function TabContent({ tab }: { tab: Tab }) {
           ]}
         />
       );
+    case 'stats':
+      return <StatsTab />;
   }
 }
 
