@@ -48,7 +48,7 @@ export function TitleCard({ title }: { title: Title }) {
         <div className="flex items-start justify-between gap-2">
           <button
             onClick={() => openStored(title)}
-            className="truncate text-left text-[15px] font-semibold leading-snug text-neutral-900 dark:text-neutral-100"
+            className="min-w-0 truncate text-left text-[15px] font-semibold leading-snug text-neutral-900 dark:text-neutral-100"
           >
             {displayTitle}
           </button>

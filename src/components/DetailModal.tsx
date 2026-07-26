@@ -161,17 +161,36 @@ function ModalShell({
          * of stopping at a hard edge partway down.
          */}
         {poster && (
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 h-[26rem] overflow-hidden"
-          >
-            <img
-              src={poster}
-              alt=""
-              className="h-full w-full scale-125 object-cover opacity-45 blur-2xl"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/60 to-white dark:via-neutral-900/60 dark:to-neutral-900" />
-          </div>
+          <>
+            {/*
+             * iOS rubber-bands the scroll container on overscroll, briefly
+             * revealing the area above the wash's top edge. This backfills
+             * that area with more of the same blurred poster instead of the
+             * panel's flat background, so the bounce doesn't cut to a hard
+             * edge.
+             */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 -top-32 h-32 overflow-hidden"
+            >
+              <img
+                src={poster}
+                alt=""
+                className="h-full w-full scale-125 object-cover opacity-45 blur-2xl"
+              />
+            </div>
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-[26rem] overflow-hidden"
+            >
+              <img
+                src={poster}
+                alt=""
+                className="h-full w-full scale-125 object-cover opacity-45 blur-2xl"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/60 to-white dark:via-neutral-900/60 dark:to-neutral-900" />
+            </div>
+          </>
         )}
 
         <div className="relative h-40 shrink-0">

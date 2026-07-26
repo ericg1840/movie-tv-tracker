@@ -38,7 +38,7 @@ export function DiscoverGrid({ type }: { type?: 'movie' | 'series' }) {
           <button
             key={`${item.media_type}-${item.id}`}
             onClick={() => openDiscover(item)}
-            className="flex flex-col gap-1 text-left"
+            className="flex min-w-0 flex-col gap-1 text-left"
           >
             <div className="aspect-[2/3] w-full overflow-hidden rounded-xl bg-neutral-200 shadow-sm dark:bg-neutral-800">
               {item.poster_path ? (
@@ -54,7 +54,7 @@ export function DiscoverGrid({ type }: { type?: 'movie' | 'series' }) {
                 </div>
               )}
             </div>
-            <p className="truncate text-xs font-medium text-neutral-900 dark:text-neutral-100">
+            <p className="w-full min-w-0 truncate text-xs font-medium text-neutral-900 dark:text-neutral-100">
               {item.title}
             </p>
           </button>
