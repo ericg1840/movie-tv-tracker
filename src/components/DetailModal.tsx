@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import type { OmdbDetail, Title } from '../types';
 import { getTitleDetail } from '../lib/omdb';
 import { getImdbId, getSimilarTitles, posterUrl, type TrendingItem } from '../lib/tmdb';
@@ -102,9 +102,12 @@ function NotesField({ title }: { title: Title }) {
   );
 }
 
+const SIMILAR_SCROLL_STEP = 240;
+
 function SimilarTitles({ imdbId }: { imdbId: string }) {
   const { openDiscover } = useDetail();
   const [items, setItems] = useState<TrendingItem[] | undefined>(undefined);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -117,39 +120,75 @@ function SimilarTitles({ imdbId }: { imdbId: string }) {
     };
   }, [imdbId]);
 
+  // A plain mouse wheel only sends vertical delta, so this row (horizontal
+  // overflow only) never receives anything to scroll with by default.
+  // React's onWheel is passive, which can't preventDefault, so this needs a
+  // real DOM listener to stop the vertical scroll from also moving the modal.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (e.deltaY === 0 || Math.abs(e.deltaX) >= Math.abs(e.deltaY)) return;
+      el.scrollLeft += e.deltaY;
+      e.preventDefault();
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, [items]);
+
   if (!items || items.length === 0) return null;
+
+  function scrollByStep(direction: 1 | -1) {
+    scrollRef.current?.scrollBy({ left: direction * SIMILAR_SCROLL_STEP, behavior: 'smooth' });
+  }
 
   return (
     <div className="flex flex-col gap-2">
       <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
         More like this
       </h3>
-      <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1">
-        {items.map((item) => (
-          <button
-            key={`${item.media_type}-${item.id}`}
-            onClick={() => openDiscover(item)}
-            className="flex w-20 min-w-0 shrink-0 flex-col gap-1 text-left"
-          >
-            <div className="aspect-[2/3] w-full overflow-hidden rounded-lg bg-neutral-200 shadow-sm dark:bg-neutral-800">
-              {item.poster_path ? (
-                <img
-                  src={posterUrl(item.poster_path)}
-                  alt=""
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center text-neutral-400">
-                  <Icon name="film" className="h-5 w-5" />
-                </div>
-              )}
-            </div>
-            <p className="w-full min-w-0 truncate text-[11px] font-medium text-neutral-700 dark:text-neutral-300">
-              {item.title}
-            </p>
-          </button>
-        ))}
+      <div className="group/scroll relative -mx-4">
+        <div ref={scrollRef} className="flex gap-3 overflow-x-auto px-4 pb-1">
+          {items.map((item) => (
+            <button
+              key={`${item.media_type}-${item.id}`}
+              onClick={() => openDiscover(item)}
+              className="flex w-20 min-w-0 shrink-0 flex-col gap-1 text-left"
+            >
+              <div className="aspect-[2/3] w-full overflow-hidden rounded-lg bg-neutral-200 shadow-sm dark:bg-neutral-800">
+                {item.poster_path ? (
+                  <img
+                    src={posterUrl(item.poster_path)}
+                    alt=""
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-neutral-400">
+                    <Icon name="film" className="h-5 w-5" />
+                  </div>
+                )}
+              </div>
+              <p className="w-full min-w-0 truncate text-[11px] font-medium text-neutral-700 dark:text-neutral-300">
+                {item.title}
+              </p>
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={() => scrollByStep(-1)}
+          aria-label="Scroll left"
+          className="absolute left-1 top-1/2 hidden h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white opacity-0 backdrop-blur-sm transition-opacity hover:bg-black/70 group-hover/scroll:opacity-100 md:flex"
+        >
+          ‹
+        </button>
+        <button
+          onClick={() => scrollByStep(1)}
+          aria-label="Scroll right"
+          className="absolute right-1 top-1/2 hidden h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-black/50 text-white opacity-0 backdrop-blur-sm transition-opacity hover:bg-black/70 group-hover/scroll:opacity-100 md:flex"
+        >
+          ›
+        </button>
       </div>
     </div>
   );
