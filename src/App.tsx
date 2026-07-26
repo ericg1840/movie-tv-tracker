@@ -18,6 +18,7 @@ function TabContent({ tab }: { tab: Tab }) {
         <ListTab
           heading="Watchlist"
           emptyMessage="Nothing here yet. Add something from Search."
+          randomPick
           filter={(t) =>
             (t.status === 'want_to_watch' || t.status === 'watching') &&
             (!t.released_on || t.released_on <= today())

@@ -1,28 +1,36 @@
 import { useMemo, useState } from 'react';
 import type { Title } from '../types';
 import { useTitles } from '../context/TitlesContext';
+import { useDetail } from '../context/DetailContext';
 import { TitleCard } from './TitleCard';
+import { Icon } from './Icon';
 
 export interface SortOption {
   label: string;
   fn: (a: Title, b: Title) => number;
 }
 
+const ROLL_DURATION_MS = 500;
+
 export function ListTab({
   heading,
   emptyMessage,
   filter,
   sortOptions,
+  randomPick = false,
 }: {
   heading: string;
   emptyMessage: string;
   filter: (title: Title) => boolean;
   sortOptions: SortOption[];
+  randomPick?: boolean;
 }) {
   const { titles, loading, error, refresh } = useTitles();
+  const { openStored } = useDetail();
   const [sortIndex, setSortIndex] = useState(0);
   const [typeFilter, setTypeFilter] = useState<'all' | 'movie' | 'series'>('all');
   const [genreFilter, setGenreFilter] = useState('all');
+  const [rolling, setRolling] = useState(false);
 
   const baseItems = useMemo(() => titles.filter(filter), [titles, filter]);
 
@@ -43,19 +51,42 @@ export function ListTab({
       .sort(sortOptions[sortIndex]?.fn);
   }, [baseItems, typeFilter, genreFilter, sortIndex, sortOptions]);
 
+  function handlePick() {
+    if (rolling || items.length === 0) return;
+    setRolling(true);
+    window.setTimeout(() => {
+      setRolling(false);
+      openStored(items[Math.floor(Math.random() * items.length)]);
+    }, ROLL_DURATION_MS);
+  }
+
   return (
     <div className="flex flex-col gap-3 p-4">
       <div className="flex items-center justify-between">
         <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
           {heading}
         </h1>
-        <button
-          onClick={() => refresh()}
-          aria-label="Refresh"
-          className="text-neutral-400 hover:text-brand-700"
-        >
-          ↻
-        </button>
+        <div className="flex items-center gap-2">
+          {randomPick && (
+            <button
+              onClick={handlePick}
+              disabled={rolling || items.length === 0}
+              aria-label="Pick something for me"
+              title="Pick something for me"
+              className="flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1.5 text-xs font-medium text-brand-800 transition-colors hover:bg-brand-100 disabled:cursor-default disabled:opacity-40 dark:bg-brand-950/50 dark:text-brand-300 dark:hover:bg-brand-900/60"
+            >
+              <Icon name="dice" className={`h-4 w-4 ${rolling ? 'animate-dice-roll' : ''}`} />
+              Pick for me
+            </button>
+          )}
+          <button
+            onClick={() => refresh()}
+            aria-label="Refresh"
+            className="text-neutral-400 hover:text-brand-700"
+          >
+            ↻
+          </button>
+        </div>
       </div>
 
       {baseItems.length > 0 && (

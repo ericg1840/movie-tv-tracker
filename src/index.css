@@ -52,3 +52,23 @@ body {
 .animate-tab-in {
   animation: tab-fade-in 0.18s ease-out;
 }
+
+@keyframes dice-roll {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-20deg);
+  }
+  50% {
+    transform: rotate(15deg);
+  }
+  75% {
+    transform: rotate(-10deg);
+  }
+}
+
+.animate-dice-roll {
+  animation: dice-roll 0.5s ease-in-out;
+}
