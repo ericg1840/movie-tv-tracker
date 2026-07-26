@@ -88,7 +88,7 @@ function App() {
     <TitlesProvider>
       <DetailProvider>
         <div className="flex min-h-dvh flex-col bg-neutral-50 dark:bg-neutral-950">
-          <header className="sticky top-0 z-10 border-b border-black/10 bg-white/95 px-4 py-3.5 backdrop-blur dark:border-white/10 dark:bg-neutral-950/95">
+          <header className="sticky top-0 z-10 border-b border-black/10 bg-white/95 px-4 pb-3.5 pt-[calc(env(safe-area-inset-top)+0.875rem)] backdrop-blur dark:border-white/10 dark:bg-neutral-950/95">
             <h1 className="mx-auto flex max-w-6xl items-center text-lg font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
               <a href="./landing.html" className="flex items-center gap-1.5">
                 <img src="./favicon.svg" alt="" className="h-6 w-6 rounded-md" />
