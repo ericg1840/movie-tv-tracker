@@ -18,7 +18,9 @@ export function Trailer({ imdbId }: { imdbId: string }) {
   }, [imdbId]);
 
   if (trailer === undefined) {
-    return <p className="text-xs text-neutral-400">Checking for a trailer…</p>;
+    return (
+      <div className="aspect-video w-full animate-pulse rounded-2xl bg-neutral-200 dark:bg-neutral-800" />
+    );
   }
 
   if (!trailer) return null;

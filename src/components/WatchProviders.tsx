@@ -36,7 +36,19 @@ export function WatchProviders({ imdbId }: { imdbId: string }) {
   }, [imdbId]);
 
   if (data === undefined) {
-    return <p className="text-xs text-neutral-400">Checking where to watch…</p>;
+    return (
+      <div className="flex flex-col gap-2.5 rounded-2xl border border-black/5 bg-neutral-50 p-3.5 dark:border-white/5 dark:bg-neutral-950/40">
+        <div className="h-4 w-28 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+        <div className="flex gap-2">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="h-11 w-11 animate-pulse rounded-xl bg-neutral-200 dark:bg-neutral-800"
+            />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   const hasAny = data && (data.flatrate?.length || data.rent?.length || data.buy?.length);

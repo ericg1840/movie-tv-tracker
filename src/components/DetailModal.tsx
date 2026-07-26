@@ -13,10 +13,30 @@ import { Icon } from './Icon';
 function Field({ label, value }: { label: string; value: string | null | undefined }) {
   if (!value || value === 'N/A') return null;
   return (
-    <p className="text-sm text-neutral-700 dark:text-neutral-300">
-      <span className="font-medium text-neutral-900 dark:text-neutral-100">{label}:</span>{' '}
-      {value}
-    </p>
+    <div className="flex flex-col gap-0.5">
+      <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">{label}</span>
+      <span className="text-sm text-neutral-800 dark:text-neutral-200">{value}</span>
+    </div>
+  );
+}
+
+function GenreTags({ value }: { value: string | null | undefined }) {
+  if (!value || value === 'N/A') return null;
+  const genres = value
+    .split(',')
+    .map((g) => g.trim())
+    .filter(Boolean);
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {genres.map((g) => (
+        <span
+          key={g}
+          className="rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-800 dark:bg-brand-950/50 dark:text-brand-300"
+        >
+          {g}
+        </span>
+      ))}
+    </div>
   );
 }
 
@@ -212,7 +232,7 @@ function StoredDetail({ title }: { title: Title }) {
     <ModalShell poster={live.poster_url} title={live.title} badges={badges} onClose={close}>
       <Trailer imdbId={live.imdb_id} />
 
-      <Field label="Genre" value={live.genre} />
+      <GenreTags value={live.genre} />
       <Field label="Director" value={live.director} />
       <Field label="Starring" value={live.actors} />
       {live.plot && <ExpandablePlot text={live.plot} />}
@@ -301,7 +321,7 @@ function SearchDetail({ imdbId }: { imdbId: string }) {
     >
       <Trailer imdbId={imdbId} />
 
-      <Field label="Genre" value={detail.Genre} />
+      <GenreTags value={detail.Genre} />
       <Field label="Director" value={detail.Director} />
       <Field label="Starring" value={detail.Actors} />
       {detail.Plot && detail.Plot !== 'N/A' && <ExpandablePlot text={detail.Plot} />}
