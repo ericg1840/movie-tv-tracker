@@ -99,7 +99,7 @@ function App() {
             <Sidebar active={tab} onChange={setTab} />
 
             <main className="min-w-0 flex-1 pb-2">
-              <div className="mx-auto max-w-lg md:max-w-none">
+              <div key={tab} className="animate-tab-in mx-auto max-w-lg md:max-w-none">
                 <TabContent tab={tab} />
               </div>
             </main>

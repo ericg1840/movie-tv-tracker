@@ -1,25 +1,38 @@
+import { useState } from 'react';
 import type { Title } from '../types';
 import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
 import { StatusActions } from './StatusActions';
 import { Icon } from './Icon';
 
+const REMOVE_TRANSITION_MS = 180;
+
 export function TitleCard({ title }: { title: Title }) {
   const { remove } = useTitles();
   const { openStored } = useDetail();
+  const [removing, setRemoving] = useState(false);
+
+  function handleRemove() {
+    setRemoving(true);
+    window.setTimeout(() => remove(title.id), REMOVE_TRANSITION_MS);
+  }
 
   return (
-    <div className="flex gap-3.5 rounded-2xl border border-black/5 bg-white p-3 shadow-sm ring-1 ring-black/[0.02] dark:border-white/5 dark:bg-neutral-900 dark:ring-white/[0.02]">
+    <div
+      className={`flex gap-3.5 rounded-2xl border border-black/5 bg-white p-3 shadow-sm ring-1 ring-black/[0.02] transition-all duration-150 ease-out hover:shadow-md dark:border-white/5 dark:bg-neutral-900 dark:ring-white/[0.02] ${
+        removing ? 'scale-95 opacity-0' : 'scale-100 opacity-100'
+      }`}
+    >
       <button
         onClick={() => openStored(title)}
         aria-label={`View details for ${title.title}`}
-        className="aspect-[2/3] h-32 shrink-0 overflow-hidden rounded-xl bg-neutral-200 shadow-sm dark:bg-neutral-800"
+        className="group aspect-[2/3] h-32 shrink-0 overflow-hidden rounded-xl bg-neutral-200 shadow-sm dark:bg-neutral-800"
       >
         {title.poster_url ? (
           <img
             src={title.poster_url}
             alt={title.title}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             loading="lazy"
           />
         ) : (
@@ -38,9 +51,9 @@ export function TitleCard({ title }: { title: Title }) {
             {title.title}
           </button>
           <button
-            onClick={() => remove(title.id)}
+            onClick={handleRemove}
             aria-label="Remove"
-            className="-mr-1 -mt-1 shrink-0 rounded-full p-1 text-neutral-400 hover:bg-neutral-100 hover:text-red-500 dark:hover:bg-neutral-800"
+            className="-mr-1 -mt-1 shrink-0 rounded-full p-1 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-red-500 dark:hover:bg-neutral-800"
           >
             ✕
           </button>

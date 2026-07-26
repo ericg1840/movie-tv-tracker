@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import type { OmdbDetail, Title } from '../types';
 import { getTitleDetail } from '../lib/omdb';
 import { getImdbId, posterUrl, type TrendingItem } from '../lib/tmdb';
@@ -78,6 +78,8 @@ function NotesField({ title }: { title: Title }) {
   );
 }
 
+const MODAL_TRANSITION_MS = 200;
+
 function ModalShell({
   poster,
   title,
@@ -92,23 +94,40 @@ function ModalShell({
   children: ReactNode;
 }) {
   useBodyScrollLock();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setVisible(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setVisible(false);
+    window.setTimeout(onClose, MODAL_TRANSITION_MS);
+  }, [onClose]);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') handleClose();
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [onClose]);
+  }, [handleClose]);
 
   return (
     <div
-      className="fixed inset-0 z-20 flex items-end justify-center overscroll-contain bg-black/60 sm:items-center"
-      onClick={onClose}
+      className={`fixed inset-0 z-20 flex items-end justify-center overscroll-contain bg-black/60 transition-opacity duration-200 sm:items-center ${
+        visible ? 'opacity-100' : 'opacity-0'
+      }`}
+      onClick={handleClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative flex max-h-[88dvh] w-full max-w-lg flex-col overflow-y-auto overscroll-contain rounded-t-3xl bg-white dark:bg-neutral-900 sm:rounded-3xl"
+        className={`relative flex max-h-[88dvh] w-full max-w-lg flex-col overflow-y-auto overscroll-contain rounded-t-3xl bg-white transition-all duration-200 ease-out dark:bg-neutral-900 sm:rounded-3xl ${
+          visible
+            ? 'translate-y-0 opacity-100 sm:scale-100'
+            : 'translate-y-6 opacity-0 sm:translate-y-0 sm:scale-95'
+        }`}
       >
         {/*
          * Blurred poster wash. It's absolutely positioned inside the scroll
@@ -132,9 +151,9 @@ function ModalShell({
 
         <div className="relative h-40 shrink-0">
           <button
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="Close"
-            className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm hover:bg-black/50"
+            className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition-transform hover:scale-110 hover:bg-black/50"
           >
             ✕
           </button>
