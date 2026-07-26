@@ -1,4 +1,5 @@
 import type { OmdbDetail, OmdbSearchItem } from '../types';
+import { decodeEntities } from './text';
 
 const apiKey = import.meta.env.VITE_OMDB_API_KEY;
 const BASE_URL = 'https://www.omdbapi.com/';
@@ -30,7 +31,7 @@ export async function searchTitles(
     if (data.Error === 'Movie not found!') return [];
     throw new Error(data.Error ?? 'OMDB search failed');
   }
-  return data.Search ?? [];
+  return (data.Search ?? []).map((item) => ({ ...item, Title: decodeEntities(item.Title) }));
 }
 
 export async function getTitleDetail(imdbId: string): Promise<OmdbDetail> {
@@ -41,7 +42,14 @@ export async function getTitleDetail(imdbId: string): Promise<OmdbDetail> {
   if (data.Response === 'False') {
     throw new Error(data.Error ?? 'OMDB lookup failed');
   }
-  return data;
+  return {
+    ...data,
+    Title: decodeEntities(data.Title),
+    Plot: decodeEntities(data.Plot),
+    Director: decodeEntities(data.Director),
+    Actors: decodeEntities(data.Actors),
+    Genre: decodeEntities(data.Genre),
+  };
 }
 
 /** OMDB dates look like "23 Jul 2026" or "N/A" -> returns an ISO yyyy-mm-dd or null. */

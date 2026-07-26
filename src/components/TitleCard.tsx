@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { Title } from '../types';
 import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
+import { decodeEntities } from '../lib/text';
 import { StatusActions } from './StatusActions';
 import { Icon } from './Icon';
 
@@ -11,6 +12,7 @@ export function TitleCard({ title }: { title: Title }) {
   const { remove } = useTitles();
   const { openStored } = useDetail();
   const [removing, setRemoving] = useState(false);
+  const displayTitle = decodeEntities(title.title);
 
   function handleRemove() {
     setRemoving(true);
@@ -25,13 +27,13 @@ export function TitleCard({ title }: { title: Title }) {
     >
       <button
         onClick={() => openStored(title)}
-        aria-label={`View details for ${title.title}`}
+        aria-label={`View details for ${displayTitle}`}
         className="group aspect-[2/3] h-32 shrink-0 overflow-hidden rounded-xl bg-neutral-200 shadow-sm dark:bg-neutral-800"
       >
         {title.poster_url ? (
           <img
             src={title.poster_url}
-            alt={title.title}
+            alt={displayTitle}
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             loading="lazy"
           />
@@ -48,7 +50,7 @@ export function TitleCard({ title }: { title: Title }) {
             onClick={() => openStored(title)}
             className="truncate text-left text-[15px] font-semibold leading-snug text-neutral-900 dark:text-neutral-100"
           >
-            {title.title}
+            {displayTitle}
           </button>
           <button
             onClick={handleRemove}
@@ -69,7 +71,9 @@ export function TitleCard({ title }: { title: Title }) {
         </div>
 
         {title.genre && (
-          <p className="truncate text-xs text-neutral-500 dark:text-neutral-400">{title.genre}</p>
+          <p className="truncate text-xs text-neutral-500 dark:text-neutral-400">
+            {decodeEntities(title.genre)}
+          </p>
         )}
 
         <div className="mt-auto pt-1">

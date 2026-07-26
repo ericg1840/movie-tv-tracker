@@ -3,6 +3,7 @@ import type { OmdbDetail, Title } from '../types';
 import { getTitleDetail } from '../lib/omdb';
 import { getImdbId, posterUrl, type TrendingItem } from '../lib/tmdb';
 import { useBodyScrollLock } from '../lib/useBodyScrollLock';
+import { decodeEntities } from '../lib/text';
 import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
 import { StatusActions } from './StatusActions';
@@ -15,14 +16,16 @@ function Field({ label, value }: { label: string; value: string | null | undefin
   return (
     <div className="flex flex-col gap-0.5">
       <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">{label}</span>
-      <span className="text-sm text-neutral-800 dark:text-neutral-200">{value}</span>
+      <span className="text-sm text-neutral-800 dark:text-neutral-200">
+        {decodeEntities(value)}
+      </span>
     </div>
   );
 }
 
 function GenreTags({ value }: { value: string | null | undefined }) {
   if (!value || value === 'N/A') return null;
-  const genres = value
+  const genres = decodeEntities(value)
     .split(',')
     .map((g) => g.trim())
     .filter(Boolean);
@@ -42,8 +45,9 @@ function GenreTags({ value }: { value: string | null | undefined }) {
 
 const PLOT_PREVIEW_LENGTH = 160;
 
-function ExpandablePlot({ text }: { text: string }) {
+function ExpandablePlot({ text: rawText }: { text: string }) {
   const [expanded, setExpanded] = useState(false);
+  const text = decodeEntities(rawText);
   const isLong = text.length > PLOT_PREVIEW_LENGTH;
   const shown = expanded || !isLong ? text : text.slice(0, PLOT_PREVIEW_LENGTH).trimEnd() + '…';
 
@@ -102,7 +106,7 @@ const MODAL_TRANSITION_MS = 200;
 
 function ModalShell({
   poster,
-  title,
+  title: rawTitle,
   badges,
   onClose,
   children,
@@ -113,6 +117,7 @@ function ModalShell({
   onClose: () => void;
   children: ReactNode;
 }) {
+  const title = decodeEntities(rawTitle);
   useBodyScrollLock();
   const [visible, setVisible] = useState(false);
 
