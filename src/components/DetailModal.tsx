@@ -212,10 +212,42 @@ function ModalShell({
   const title = decodeEntities(rawTitle);
   useBodyScrollLock();
   const [visible, setVisible] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setVisible(true));
     return () => cancelAnimationFrame(id);
+  }, []);
+
+  // iOS rubber-bands a scrolled element when you drag past its start/end,
+  // briefly revealing the panel's flat background above the poster wash.
+  // Stopping the drag's default action right at the boundary (rather than
+  // trying to guess how far a bounce might reveal) keeps the gesture from
+  // triggering the bounce at all.
+  useEffect(() => {
+    const el = panelRef.current;
+    if (!el) return;
+    let startY = 0;
+
+    const onTouchStart = (e: TouchEvent) => {
+      startY = e.touches[0].clientY;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      const deltaY = e.touches[0].clientY - startY;
+      const atTop = el.scrollTop <= 0;
+      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight;
+      if ((atTop && deltaY > 0) || (atBottom && deltaY < 0)) {
+        e.preventDefault();
+      }
+    };
+
+    el.addEventListener('touchstart', onTouchStart, { passive: true });
+    el.addEventListener('touchmove', onTouchMove, { passive: false });
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart);
+      el.removeEventListener('touchmove', onTouchMove);
+    };
   }, []);
 
   const handleClose = useCallback(() => {
@@ -239,6 +271,7 @@ function ModalShell({
       onClick={handleClose}
     >
       <div
+        ref={panelRef}
         onClick={(e) => e.stopPropagation()}
         className={`relative flex max-h-[88dvh] w-full max-w-lg flex-col overflow-y-auto overscroll-contain rounded-t-3xl bg-white transition-all duration-200 ease-out dark:bg-neutral-900 sm:rounded-3xl ${
           visible
@@ -253,36 +286,17 @@ function ModalShell({
          * of stopping at a hard edge partway down.
          */}
         {poster && (
-          <>
-            {/*
-             * iOS rubber-bands the scroll container on overscroll, briefly
-             * revealing the area above the wash's top edge. This backfills
-             * that area with more of the same blurred poster instead of the
-             * panel's flat background, so the bounce doesn't cut to a hard
-             * edge.
-             */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 -top-32 h-32 overflow-hidden"
-            >
-              <img
-                src={poster}
-                alt=""
-                className="h-full w-full scale-125 object-cover opacity-45 blur-2xl"
-              />
-            </div>
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 top-0 h-[26rem] overflow-hidden"
-            >
-              <img
-                src={poster}
-                alt=""
-                className="h-full w-full scale-125 object-cover opacity-45 blur-2xl"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/60 to-white dark:via-neutral-900/60 dark:to-neutral-900" />
-            </div>
-          </>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 top-0 h-[26rem] overflow-hidden"
+          >
+            <img
+              src={poster}
+              alt=""
+              className="h-full w-full scale-125 object-cover opacity-45 blur-2xl"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/60 to-white dark:via-neutral-900/60 dark:to-neutral-900" />
+          </div>
         )}
 
         <div className="relative h-40 shrink-0">
