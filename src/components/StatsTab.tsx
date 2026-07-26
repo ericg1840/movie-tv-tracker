@@ -2,12 +2,25 @@ import { useMemo } from 'react';
 import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
 import { decodeEntities } from '../lib/text';
+import { todayIso } from '../lib/dates';
 import type { Title } from '../types';
 
 function parseRuntimeMinutes(runtime: string | null): number {
   if (!runtime) return 0;
   const match = runtime.match(/\d+/);
   return match ? Number(match[0]) : 0;
+}
+
+function downloadBackup(titles: Title[]) {
+  const blob = new Blob([JSON.stringify(titles, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `watchlist-backup-${todayIso()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
 
 function StatTile({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
@@ -173,6 +186,21 @@ export function StatsTab() {
           )}
         </>
       )}
+
+      <div className="flex flex-col gap-2 rounded-2xl border border-black/5 bg-white p-4 shadow-sm ring-1 ring-black/[0.02] dark:border-white/5 dark:bg-neutral-900 dark:ring-white/[0.02]">
+        <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">Backup</h2>
+        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+          There's no login here, so everything lives in one Supabase project. Download a copy of
+          your whole watchlist ({titles.length} {titles.length === 1 ? 'title' : 'titles'}) in
+          case you ever need it.
+        </p>
+        <button
+          onClick={() => downloadBackup(titles)}
+          className="mt-1 self-start rounded-full bg-brand-700 px-4 py-1.5 text-xs font-medium text-white hover:bg-brand-800"
+        >
+          Download backup (.json)
+        </button>
+      </div>
     </div>
   );
 }
