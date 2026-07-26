@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import type { OmdbDetail, Title } from '../types';
 import { getTitleDetail } from '../lib/omdb';
-import { getImdbId, posterUrl, type TrendingItem } from '../lib/tmdb';
+import { getImdbId, getSimilarTitles, posterUrl, type TrendingItem } from '../lib/tmdb';
 import { useBodyScrollLock } from '../lib/useBodyScrollLock';
 import { decodeEntities } from '../lib/text';
 import { useTitles } from '../context/TitlesContext';
@@ -98,6 +98,59 @@ function NotesField({ title }: { title: Title }) {
         rows={3}
         className="w-full resize-none rounded-2xl border border-black/5 bg-white px-3 py-2 text-sm text-neutral-800 shadow-sm outline-none ring-1 ring-black/[0.02] focus:border-brand-400 dark:border-white/5 dark:bg-neutral-950/40 dark:text-neutral-100 dark:ring-white/[0.02]"
       />
+    </div>
+  );
+}
+
+function SimilarTitles({ imdbId }: { imdbId: string }) {
+  const { openDiscover } = useDetail();
+  const [items, setItems] = useState<TrendingItem[] | undefined>(undefined);
+
+  useEffect(() => {
+    let cancelled = false;
+    setItems(undefined);
+    getSimilarTitles(imdbId)
+      .then((r) => !cancelled && setItems(r))
+      .catch(() => !cancelled && setItems([]));
+    return () => {
+      cancelled = true;
+    };
+  }, [imdbId]);
+
+  if (!items || items.length === 0) return null;
+
+  return (
+    <div className="flex flex-col gap-2">
+      <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+        More like this
+      </h3>
+      <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1">
+        {items.map((item) => (
+          <button
+            key={`${item.media_type}-${item.id}`}
+            onClick={() => openDiscover(item)}
+            className="flex w-20 min-w-0 shrink-0 flex-col gap-1 text-left"
+          >
+            <div className="aspect-[2/3] w-full overflow-hidden rounded-lg bg-neutral-200 shadow-sm dark:bg-neutral-800">
+              {item.poster_path ? (
+                <img
+                  src={posterUrl(item.poster_path)}
+                  alt=""
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-neutral-400">
+                  <Icon name="film" className="h-5 w-5" />
+                </div>
+              )}
+            </div>
+            <p className="w-full min-w-0 truncate text-[11px] font-medium text-neutral-700 dark:text-neutral-300">
+              {item.title}
+            </p>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
@@ -285,6 +338,8 @@ function StoredDetail({ title }: { title: Title }) {
       <div className="mt-2">
         <StatusActions title={live} />
       </div>
+
+      <SimilarTitles imdbId={live.imdb_id} />
     </ModalShell>
   );
 }
@@ -366,6 +421,8 @@ function SearchDetail({ imdbId }: { imdbId: string }) {
       >
         {added ? 'Added ✓' : adding ? 'Adding…' : 'Add to Watchlist'}
       </button>
+
+      <SimilarTitles imdbId={imdbId} />
     </ModalShell>
   );
 }

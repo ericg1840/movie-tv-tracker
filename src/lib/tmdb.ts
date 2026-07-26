@@ -99,6 +99,27 @@ export async function getTrending(mediaType?: 'movie' | 'tv'): Promise<TrendingI
     }));
 }
 
+export async function getSimilarTitles(imdbId: string): Promise<TrendingItem[]> {
+  const target = await findTmdbTarget(imdbId);
+  if (!target) return [];
+
+  const res = await fetch(
+    `${BASE_URL}/${target.mediaType}/${target.id}/recommendations?api_key=${apiKey}`,
+  );
+  if (!res.ok) return [];
+
+  const data = await res.json();
+  const results: TmdbTrendingResult[] = data.results ?? [];
+
+  return results.slice(0, 12).map((r) => ({
+    id: r.id,
+    media_type: target.mediaType,
+    title: r.title ?? r.name ?? 'Untitled',
+    year: (r.release_date ?? r.first_air_date ?? '').slice(0, 4) || null,
+    poster_path: r.poster_path,
+  }));
+}
+
 export async function getImdbId(
   tmdbId: number,
   mediaType: 'movie' | 'tv',
