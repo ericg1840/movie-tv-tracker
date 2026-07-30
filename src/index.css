@@ -45,6 +45,28 @@ body {
   overscroll-behavior-y: none;
 }
 
+/* Scrolling stays functional everywhere, the bars just don't render. */
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/*
+ * Native <select> chrome (the glossy inset button look, esp. on macOS/Safari)
+ * can't be restyled directly, so drop it and draw our own chevron instead.
+ */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 7.5l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
+  background-size: 14px;
+  padding-right: 1.75rem;
+}
+
 @keyframes tab-fade-in {
   from {
     opacity: 0;

@@ -63,7 +63,7 @@ export function StatusActions({ title }: { title: Title }) {
         <select
           value={title.my_rating ?? ''}
           onChange={(e) => setRating(title.id, e.target.value ? Number(e.target.value) : null)}
-          className="rounded border border-white/10 bg-transparent px-1 py-0.5"
+          className="rounded border border-white/10 bg-transparent py-0.5 pl-1 pr-4"
         >
           <option value="">–</option>
           {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (

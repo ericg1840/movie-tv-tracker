@@ -94,7 +94,7 @@ export function ListTab({
           <select
             value={sortIndex}
             onChange={(e) => setSortIndex(Number(e.target.value))}
-            className="rounded-full border border-white/5 bg-neutral-900 px-3 py-1.5 font-medium text-neutral-300 shadow-sm ring-1 ring-white/[0.02]"
+            className="rounded-full border border-white/5 bg-neutral-900 py-1.5 pl-3 pr-7 font-medium text-neutral-300 shadow-sm ring-1 ring-white/[0.02]"
           >
             {sortOptions.map((opt, i) => (
               <option key={opt.label} value={i}>
@@ -129,7 +129,7 @@ export function ListTab({
             <select
               value={genreFilter}
               onChange={(e) => setGenreFilter(e.target.value)}
-              className="rounded-full border border-white/5 bg-neutral-900 px-3 py-1.5 font-medium text-neutral-300 shadow-sm ring-1 ring-white/[0.02]"
+              className="rounded-full border border-white/5 bg-neutral-900 py-1.5 pl-3 pr-7 font-medium text-neutral-300 shadow-sm ring-1 ring-white/[0.02]"
             >
               <option value="all">All genres</option>
               {genres.map((g) => (
