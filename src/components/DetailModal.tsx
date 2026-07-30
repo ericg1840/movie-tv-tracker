@@ -273,22 +273,31 @@ function ModalShell({
       <div
         ref={panelRef}
         onClick={(e) => e.stopPropagation()}
-        className={`relative flex max-h-[88dvh] w-full max-w-lg flex-col overflow-y-auto overscroll-contain rounded-t-3xl bg-neutral-900 transition-all duration-200 ease-out sm:rounded-3xl ${
+        className={`relative flex max-h-[88dvh] w-full max-w-lg flex-col overflow-y-auto overscroll-contain rounded-t-3xl bg-neutral-900 transition-all duration-200 ease-out sm:rounded-3xl md:h-[85dvh] md:max-h-[85dvh] md:max-w-4xl md:flex-row md:overflow-hidden lg:max-w-5xl ${
           visible
             ? 'translate-y-0 opacity-100 sm:scale-100'
             : 'translate-y-6 opacity-0 sm:translate-y-0 sm:scale-95'
         }`}
       >
+        <button
+          onClick={handleClose}
+          aria-label="Close"
+          className="absolute right-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition-transform hover:scale-110 hover:bg-black/50"
+        >
+          ✕
+        </button>
+
         {/*
          * Blurred poster wash. It's absolutely positioned inside the scroll
          * container so it scrolls away with the content, and it runs well past
          * the header so the artwork dissolves into the panel gradually instead
-         * of stopping at a hard edge partway down.
+         * of stopping at a hard edge partway down. Desktop swaps this compact
+         * header for a full poster column instead, so the wash is mobile-only.
          */}
         {poster && (
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-0 top-0 h-[26rem] overflow-hidden"
+            className="pointer-events-none absolute inset-x-0 top-0 h-[26rem] overflow-hidden md:hidden"
           >
             <img
               src={poster}
@@ -299,15 +308,7 @@ function ModalShell({
           </div>
         )}
 
-        <div className="relative h-40 shrink-0">
-          <button
-            onClick={handleClose}
-            aria-label="Close"
-            className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition-transform hover:scale-110 hover:bg-black/50"
-          >
-            ✕
-          </button>
-
+        <div className="relative h-40 shrink-0 md:hidden">
           <div className="absolute inset-x-4 bottom-3 flex items-end gap-3">
             <div className="h-28 w-20 shrink-0 overflow-hidden rounded-xl bg-neutral-800 shadow-lg ring-2 ring-neutral-900">
               {poster ? (
@@ -329,7 +330,24 @@ function ModalShell({
           </div>
         </div>
 
-        <div className="relative flex flex-col gap-2.5 p-4">{children}</div>
+        {/* Desktop poster column, full modal height instead of the mobile wash. */}
+        <div className="hidden shrink-0 bg-neutral-950 md:block md:h-full md:w-72 lg:w-80">
+          {poster ? (
+            <img src={poster} alt={title} className="h-full w-full object-cover" />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-neutral-400">
+              <Icon name="film" className="h-10 w-10" />
+            </div>
+          )}
+        </div>
+
+        <div className="relative flex min-w-0 flex-1 flex-col md:h-full md:overflow-y-auto">
+          <div className="hidden shrink-0 border-b border-white/5 bg-neutral-900/95 px-6 pb-4 pt-6 md:block">
+            <h2 className="text-2xl font-bold leading-tight text-neutral-100">{title}</h2>
+            <p className="mt-1 text-sm font-medium text-neutral-400">{badges}</p>
+          </div>
+          <div className="relative flex flex-col gap-2.5 p-4 md:p-6">{children}</div>
+        </div>
       </div>
     </div>
   );
