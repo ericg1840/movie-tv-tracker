@@ -15,8 +15,8 @@ function Field({ label, value }: { label: string; value: string | null | undefin
   if (!value || value === 'N/A') return null;
   return (
     <div className="flex flex-col gap-0.5">
-      <span className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">{label}</span>
-      <span className="text-sm text-neutral-800 dark:text-neutral-200">
+      <span className="text-xs font-semibold text-neutral-400">{label}</span>
+      <span className="text-sm text-neutral-200">
         {decodeEntities(value)}
       </span>
     </div>
@@ -34,7 +34,7 @@ function GenreTags({ value }: { value: string | null | undefined }) {
       {genres.map((g) => (
         <span
           key={g}
-          className="rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-800 dark:bg-brand-950/50 dark:text-brand-300"
+          className="rounded-full bg-brand-950/50 px-2.5 py-1 text-xs font-medium text-brand-300"
         >
           {g}
         </span>
@@ -52,12 +52,12 @@ function ExpandablePlot({ text: rawText }: { text: string }) {
   const shown = expanded || !isLong ? text : text.slice(0, PLOT_PREVIEW_LENGTH).trimEnd() + '…';
 
   return (
-    <p className="text-sm text-neutral-700 dark:text-neutral-300">
+    <p className="text-sm text-neutral-300">
       {shown}{' '}
       {isLong && (
         <button
           onClick={() => setExpanded((e) => !e)}
-          className="font-medium text-brand-700 hover:underline dark:text-brand-400"
+          className="font-medium text-brand-400 hover:underline"
         >
           {expanded ? 'Show less' : 'Show more'}
         </button>
@@ -85,7 +85,7 @@ function NotesField({ title }: { title: Title }) {
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between">
-        <label className="text-xs font-semibold text-neutral-500 dark:text-neutral-400">
+        <label className="text-xs font-semibold text-neutral-400">
           Notes
         </label>
         {saving && <span className="text-xs text-neutral-400">Saving…</span>}
@@ -96,7 +96,7 @@ function NotesField({ title }: { title: Title }) {
         onBlur={handleBlur}
         placeholder="Why you want to watch it, where you left off…"
         rows={3}
-        className="w-full resize-none rounded-2xl border border-black/5 bg-white px-3 py-2 text-sm text-neutral-800 shadow-sm outline-none ring-1 ring-black/[0.02] focus:border-brand-400 dark:border-white/5 dark:bg-neutral-950/40 dark:text-neutral-100 dark:ring-white/[0.02]"
+        className="w-full resize-none rounded-2xl border border-white/5 bg-neutral-950/40 px-3 py-2 text-sm text-neutral-100 shadow-sm outline-none ring-1 ring-white/[0.02] focus:border-brand-400"
       />
     </div>
   );
@@ -144,7 +144,7 @@ function SimilarTitles({ imdbId }: { imdbId: string }) {
 
   return (
     <div className="flex flex-col gap-2">
-      <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+      <h3 className="text-sm font-semibold text-neutral-100">
         More like this
       </h3>
       <div className="group/scroll relative -mx-4">
@@ -155,7 +155,7 @@ function SimilarTitles({ imdbId }: { imdbId: string }) {
               onClick={() => openDiscover(item)}
               className="flex w-20 min-w-0 shrink-0 flex-col gap-1 text-left"
             >
-              <div className="aspect-[2/3] w-full overflow-hidden rounded-lg bg-neutral-200 shadow-sm dark:bg-neutral-800">
+              <div className="aspect-[2/3] w-full overflow-hidden rounded-lg bg-neutral-800 shadow-sm">
                 {item.poster_path ? (
                   <img
                     src={posterUrl(item.poster_path)}
@@ -169,7 +169,7 @@ function SimilarTitles({ imdbId }: { imdbId: string }) {
                   </div>
                 )}
               </div>
-              <p className="w-full min-w-0 truncate text-[11px] font-medium text-neutral-700 dark:text-neutral-300">
+              <p className="w-full min-w-0 truncate text-[11px] font-medium text-neutral-300">
                 {item.title}
               </p>
             </button>
@@ -273,7 +273,7 @@ function ModalShell({
       <div
         ref={panelRef}
         onClick={(e) => e.stopPropagation()}
-        className={`relative flex max-h-[88dvh] w-full max-w-lg flex-col overflow-y-auto overscroll-contain rounded-t-3xl bg-white transition-all duration-200 ease-out dark:bg-neutral-900 sm:rounded-3xl ${
+        className={`relative flex max-h-[88dvh] w-full max-w-lg flex-col overflow-y-auto overscroll-contain rounded-t-3xl bg-neutral-900 transition-all duration-200 ease-out sm:rounded-3xl ${
           visible
             ? 'translate-y-0 opacity-100 sm:scale-100'
             : 'translate-y-6 opacity-0 sm:translate-y-0 sm:scale-95'
@@ -295,7 +295,7 @@ function ModalShell({
               alt=""
               className="h-full w-full scale-125 object-cover opacity-45 blur-2xl"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/60 to-white dark:via-neutral-900/60 dark:to-neutral-900" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-neutral-900/60 to-neutral-900" />
           </div>
         )}
 
@@ -309,7 +309,7 @@ function ModalShell({
           </button>
 
           <div className="absolute inset-x-4 bottom-3 flex items-end gap-3">
-            <div className="h-28 w-20 shrink-0 overflow-hidden rounded-xl bg-neutral-200 shadow-lg ring-2 ring-white dark:bg-neutral-800 dark:ring-neutral-900">
+            <div className="h-28 w-20 shrink-0 overflow-hidden rounded-xl bg-neutral-800 shadow-lg ring-2 ring-neutral-900">
               {poster ? (
                 <img src={poster} alt={title} className="h-full w-full object-cover" />
               ) : (
@@ -319,10 +319,10 @@ function ModalShell({
               )}
             </div>
             <div className="flex min-w-0 flex-col gap-0.5 pb-1">
-              <h2 className="truncate text-xl font-bold leading-tight text-neutral-900 dark:text-neutral-100">
+              <h2 className="truncate text-xl font-bold leading-tight text-neutral-100">
                 {title}
               </h2>
-              <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+              <p className="text-xs font-medium text-neutral-400">
                 {badges}
               </p>
             </div>
@@ -382,7 +382,7 @@ function StoredDetail({ title }: { title: Title }) {
               setRefreshing(false);
             }
           }}
-          className="self-start text-xs font-medium text-brand-700 hover:underline disabled:opacity-50 dark:text-brand-400"
+          className="self-start text-xs font-medium text-brand-400 hover:underline disabled:opacity-50"
         >
           {refreshing ? 'Loading details…' : 'Load director & cast'}
         </button>
@@ -470,7 +470,7 @@ function SearchDetail({ imdbId }: { imdbId: string }) {
             setAdding(false);
           }
         }}
-        className="mt-2 self-start rounded-full bg-brand-700 px-4 py-1.5 text-xs font-medium text-white disabled:bg-neutral-300 disabled:text-neutral-500 dark:disabled:bg-neutral-700"
+        className="mt-2 self-start rounded-full bg-brand-700 px-4 py-1.5 text-xs font-medium text-white disabled:bg-neutral-700 disabled:text-neutral-500"
       >
         {added ? 'Added ✓' : adding ? 'Adding…' : 'Add to Watchlist'}
       </button>

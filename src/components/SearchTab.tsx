@@ -52,7 +52,7 @@ export function SearchTab() {
 
   return (
     <div className="flex flex-col gap-3 p-4">
-      <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+      <h1 className="text-lg font-semibold text-neutral-100">
         Find a movie or show
       </h1>
 
@@ -62,7 +62,7 @@ export function SearchTab() {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search title..."
           autoCapitalize="none"
-          className="w-full rounded-2xl border border-black/5 bg-white px-4 py-3 text-base shadow-sm outline-none ring-1 ring-black/[0.02] focus:border-brand-400 dark:border-white/5 dark:bg-neutral-900 dark:text-neutral-100 dark:ring-white/[0.02]"
+          className="w-full rounded-2xl border border-white/5 bg-neutral-900 px-4 py-3 text-base text-neutral-100 shadow-sm outline-none ring-1 ring-white/[0.02] focus:border-brand-400"
         />
 
         <div className="flex gap-2 text-sm">
@@ -79,7 +79,7 @@ export function SearchTab() {
               className={`rounded-full px-3 py-1 font-medium ${
                 type === value
                   ? 'bg-brand-700 text-white'
-                  : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300'
+                  : 'bg-neutral-800 text-neutral-300'
               }`}
             >
               {label}
@@ -102,11 +102,11 @@ export function SearchTab() {
           return (
             <div
               key={r.imdbID}
-              className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white p-2.5 shadow-sm ring-1 ring-black/[0.02] dark:border-white/5 dark:bg-neutral-900 dark:ring-white/[0.02]"
+              className="flex items-center gap-3 rounded-2xl border border-white/5 bg-neutral-900 p-2.5 shadow-sm ring-1 ring-white/[0.02]"
             >
               <button
                 onClick={() => openSearch(r)}
-                className="aspect-[2/3] h-16 shrink-0 overflow-hidden rounded-lg bg-neutral-200 dark:bg-neutral-800"
+                className="aspect-[2/3] h-16 shrink-0 overflow-hidden rounded-lg bg-neutral-800"
               >
                 {r.Poster && r.Poster !== 'N/A' ? (
                   <img
@@ -122,17 +122,17 @@ export function SearchTab() {
                 )}
               </button>
               <button onClick={() => openSearch(r)} className="min-w-0 flex-1 text-left">
-                <p className="truncate text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                <p className="truncate text-sm font-medium text-neutral-100">
                   {r.Title}
                 </p>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                <p className="text-xs text-neutral-400">
                   {r.Year} · {r.Type === 'series' ? 'TV' : 'Movie'}
                 </p>
               </button>
               <button
                 disabled={added || addingId === r.imdbID}
                 onClick={() => handleAdd(r.imdbID)}
-                className="shrink-0 rounded-full bg-brand-700 px-3 py-1.5 text-xs font-medium text-white disabled:bg-neutral-300 disabled:text-neutral-500 dark:disabled:bg-neutral-700"
+                className="shrink-0 rounded-full bg-brand-700 px-3 py-1.5 text-xs font-medium text-white disabled:bg-neutral-700 disabled:text-neutral-500"
               >
                 {added ? 'Added ✓' : addingId === r.imdbID ? 'Adding...' : 'Add'}
               </button>

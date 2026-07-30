@@ -25,12 +25,12 @@ function downloadBackup(titles: Title[]) {
 
 function StatTile({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
   return (
-    <div className="flex flex-col gap-0.5 rounded-2xl border border-black/5 bg-white p-3.5 shadow-sm ring-1 ring-black/[0.02] dark:border-white/5 dark:bg-neutral-900 dark:ring-white/[0.02]">
-      <span className="text-2xl font-bold leading-none text-neutral-900 dark:text-neutral-100">
+    <div className="flex flex-col gap-0.5 rounded-2xl border border-white/5 bg-neutral-900 p-3.5 shadow-sm ring-1 ring-white/[0.02]">
+      <span className="text-2xl font-bold leading-none text-neutral-100">
         {value}
       </span>
-      <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">{label}</span>
-      {sub && <span className="text-[11px] text-neutral-400 dark:text-neutral-500">{sub}</span>}
+      <span className="text-xs font-medium text-neutral-400">{label}</span>
+      {sub && <span className="text-[11px] text-neutral-500">{sub}</span>}
     </div>
   );
 }
@@ -39,10 +39,10 @@ function GenreBar({ genre, count, max }: { genre: string; count: number; max: nu
   const pct = Math.max(8, Math.round((count / max) * 100));
   return (
     <div className="flex items-center gap-2.5">
-      <span className="w-24 shrink-0 truncate text-xs font-medium text-neutral-600 dark:text-neutral-300">
+      <span className="w-24 shrink-0 truncate text-xs font-medium text-neutral-300">
         {genre}
       </span>
-      <div className="h-2 flex-1 overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-800">
+      <div className="h-2 flex-1 overflow-hidden rounded-full bg-neutral-800">
         <div className="h-full rounded-full bg-brand-500" style={{ width: `${pct}%` }} />
       </div>
       <span className="w-5 shrink-0 text-right text-xs text-neutral-400">{count}</span>
@@ -99,7 +99,7 @@ export function StatsTab() {
   if (loading && titles.length === 0) {
     return (
       <div className="flex flex-col gap-3 p-4">
-        <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Stats</h1>
+        <h1 className="text-lg font-semibold text-neutral-100">Stats</h1>
         <p className="text-sm text-neutral-500">Loading...</p>
       </div>
     );
@@ -108,7 +108,7 @@ export function StatsTab() {
   if (titles.length === 0) {
     return (
       <div className="flex flex-col gap-3 p-4">
-        <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Stats</h1>
+        <h1 className="text-lg font-semibold text-neutral-100">Stats</h1>
         <p className="text-sm text-neutral-500">
           Add and watch some titles to see stats here.
         </p>
@@ -118,7 +118,7 @@ export function StatsTab() {
 
   return (
     <div className="flex flex-col gap-4 p-4">
-      <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Stats</h1>
+      <h1 className="text-lg font-semibold text-neutral-100">Stats</h1>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatTile label="Watched" value={stats.watchedCount} />
@@ -147,8 +147,8 @@ export function StatsTab() {
           </div>
 
           {stats.topGenres.length > 0 && (
-            <div className="flex flex-col gap-2.5 rounded-2xl border border-black/5 bg-white p-4 shadow-sm ring-1 ring-black/[0.02] dark:border-white/5 dark:bg-neutral-900 dark:ring-white/[0.02]">
-              <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+            <div className="flex flex-col gap-2.5 rounded-2xl border border-white/5 bg-neutral-900 p-4 shadow-sm ring-1 ring-white/[0.02]">
+              <h2 className="text-sm font-semibold text-neutral-100">
                 Top genres
               </h2>
               {stats.topGenres.map(([genre, count]) => (
@@ -160,9 +160,9 @@ export function StatsTab() {
           {stats.topRated && (
             <button
               onClick={() => openStored(stats.topRated!)}
-              className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white p-3 text-left shadow-sm ring-1 ring-black/[0.02] transition-shadow hover:shadow-md dark:border-white/5 dark:bg-neutral-900 dark:ring-white/[0.02]"
+              className="flex items-center gap-3 rounded-2xl border border-white/5 bg-neutral-900 p-3 text-left shadow-sm ring-1 ring-white/[0.02] transition-shadow hover:shadow-md"
             >
-              <div className="aspect-[2/3] h-20 shrink-0 overflow-hidden rounded-lg bg-neutral-200 dark:bg-neutral-800">
+              <div className="aspect-[2/3] h-20 shrink-0 overflow-hidden rounded-lg bg-neutral-800">
                 {stats.topRated.poster_url && (
                   <img
                     src={stats.topRated.poster_url}
@@ -172,13 +172,13 @@ export function StatsTab() {
                 )}
               </div>
               <div className="flex min-w-0 flex-col gap-0.5">
-                <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+                <span className="text-xs font-medium text-neutral-400">
                   Your top rated
                 </span>
-                <span className="truncate text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+                <span className="truncate text-sm font-semibold text-neutral-100">
                   {decodeEntities(stats.topRated.title)}
                 </span>
-                <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                <span className="text-xs text-neutral-400">
                   ⭐ {stats.topRated.my_rating}/10
                 </span>
               </div>
@@ -187,9 +187,9 @@ export function StatsTab() {
         </>
       )}
 
-      <div className="flex flex-col gap-2 rounded-2xl border border-black/5 bg-white p-4 shadow-sm ring-1 ring-black/[0.02] dark:border-white/5 dark:bg-neutral-900 dark:ring-white/[0.02]">
-        <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">Backup</h2>
-        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+      <div className="flex flex-col gap-2 rounded-2xl border border-white/5 bg-neutral-900 p-4 shadow-sm ring-1 ring-white/[0.02]">
+        <h2 className="text-sm font-semibold text-neutral-100">Backup</h2>
+        <p className="text-xs text-neutral-400">
           There's no login here, so everything lives in one Supabase project. Download a copy of
           your whole watchlist ({titles.length} {titles.length === 1 ? 'title' : 'titles'}) in
           case you ever need it.

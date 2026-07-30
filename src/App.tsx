@@ -87,12 +87,12 @@ function App() {
   return (
     <TitlesProvider>
       <DetailProvider>
-        <div className="flex min-h-dvh flex-col bg-neutral-50 dark:bg-neutral-950">
-          <header className="sticky top-0 z-10 border-b border-black/10 bg-white/95 px-4 pb-3.5 pt-[calc(env(safe-area-inset-top)+0.875rem)] backdrop-blur dark:border-white/10 dark:bg-neutral-950/95">
-            <h1 className="mx-auto flex max-w-6xl items-center text-lg font-extrabold tracking-tight text-neutral-900 dark:text-neutral-100">
+        <div className="flex min-h-dvh flex-col bg-neutral-950">
+          <header className="sticky top-0 z-10 border-b border-white/5 bg-neutral-950/95 px-4 pb-3 pt-[calc(env(safe-area-inset-top)+0.75rem)] backdrop-blur">
+            <h1 className="mx-auto flex max-w-6xl items-center text-lg font-extrabold tracking-tight text-neutral-100">
               <a href="./landing.html" className="flex items-center gap-1.5">
                 <img src="./favicon.svg" alt="" className="h-6 w-6 rounded-md" />
-                <span className="bg-gradient-to-r from-brand-700 to-brand-500 bg-clip-text text-transparent dark:from-brand-400 dark:to-brand-200">
+                <span className="bg-gradient-to-r from-brand-400 to-brand-200 bg-clip-text text-transparent">
                   Watchlist
                 </span>
               </a>

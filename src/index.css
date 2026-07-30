@@ -1,6 +1,13 @@
 @import "tailwindcss";
 
 /*
+ * Dark is the only theme now (matches the app's design reference), so make
+ * `dark:` apply from the `.dark` class on <html> instead of the OS
+ * prefers-color-scheme media query.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
  * Brand palette, taken from the app icon: teal disc, navy field, coral accent.
  * brand-400 and accent-500 are the exact icon colors; the darker brand shades
  * exist so solid buttons keep white text legible on light backgrounds.

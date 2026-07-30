@@ -28,7 +28,7 @@ export function DiscoverGrid({ type }: { type?: 'movie' | 'series' }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">{heading}</h2>
+      <h2 className="text-sm font-semibold text-neutral-100">{heading}</h2>
 
       {loading && <p className="text-sm text-neutral-500">Loading…</p>}
       {error && <p className="text-sm text-red-500">{error}</p>}
@@ -40,7 +40,7 @@ export function DiscoverGrid({ type }: { type?: 'movie' | 'series' }) {
             onClick={() => openDiscover(item)}
             className="flex min-w-0 flex-col gap-1 text-left"
           >
-            <div className="aspect-[2/3] w-full overflow-hidden rounded-xl bg-neutral-200 shadow-sm dark:bg-neutral-800">
+            <div className="aspect-[2/3] w-full overflow-hidden rounded-xl bg-neutral-800 shadow-sm">
               {item.poster_path ? (
                 <img
                   src={posterUrl(item.poster_path)}
@@ -54,7 +54,7 @@ export function DiscoverGrid({ type }: { type?: 'movie' | 'series' }) {
                 </div>
               )}
             </div>
-            <p className="w-full min-w-0 truncate text-xs font-medium text-neutral-900 dark:text-neutral-100">
+            <p className="w-full min-w-0 truncate text-xs font-medium text-neutral-100">
               {item.title}
             </p>
           </button>

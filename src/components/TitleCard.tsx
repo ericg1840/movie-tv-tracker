@@ -21,14 +21,14 @@ export function TitleCard({ title }: { title: Title }) {
 
   return (
     <div
-      className={`flex gap-3.5 rounded-2xl border border-black/5 bg-white p-3 shadow-sm ring-1 ring-black/[0.02] transition-all duration-150 ease-out hover:shadow-md dark:border-white/5 dark:bg-neutral-900 dark:ring-white/[0.02] ${
+      className={`flex gap-3.5 rounded-2xl border border-white/5 bg-neutral-900 p-3 shadow-sm ring-1 ring-white/[0.02] transition-all duration-150 ease-out hover:shadow-md ${
         removing ? 'scale-95 opacity-0' : 'scale-100 opacity-100'
       }`}
     >
       <button
         onClick={() => openStored(title)}
         aria-label={`View details for ${displayTitle}`}
-        className="group aspect-[2/3] h-32 shrink-0 overflow-hidden rounded-xl bg-neutral-200 shadow-sm dark:bg-neutral-800"
+        className="group aspect-[2/3] h-32 shrink-0 overflow-hidden rounded-xl bg-neutral-800 shadow-sm"
       >
         {title.poster_url ? (
           <img
@@ -48,21 +48,21 @@ export function TitleCard({ title }: { title: Title }) {
         <div className="flex items-start justify-between gap-2">
           <button
             onClick={() => openStored(title)}
-            className="min-w-0 truncate text-left text-[15px] font-semibold leading-snug text-neutral-900 dark:text-neutral-100"
+            className="min-w-0 truncate text-left text-[15px] font-semibold leading-snug text-neutral-100"
           >
             {displayTitle}
           </button>
           <button
             onClick={handleRemove}
             aria-label="Remove"
-            className="-mr-1 -mt-1 shrink-0 rounded-full p-1 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-red-500 dark:hover:bg-neutral-800"
+            className="-mr-1 -mt-1 shrink-0 rounded-full p-1 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-red-500"
           >
             ✕
           </button>
         </div>
 
-        <div className="flex flex-wrap items-center gap-1.5 text-xs text-neutral-500 dark:text-neutral-400">
-          <span className="rounded-full bg-brand-50 px-2 py-0.5 font-medium text-brand-800 dark:bg-brand-950/50 dark:text-brand-300">
+        <div className="flex flex-wrap items-center gap-1.5 text-xs text-neutral-400">
+          <span className="rounded-full bg-brand-950/50 px-2 py-0.5 font-medium text-brand-300">
             {title.media_type === 'series' ? 'TV' : 'Movie'}
           </span>
           {title.year && <span>{title.year}</span>}
@@ -71,7 +71,7 @@ export function TitleCard({ title }: { title: Title }) {
         </div>
 
         {title.genre && (
-          <p className="truncate text-xs text-neutral-500 dark:text-neutral-400">
+          <p className="truncate text-xs text-neutral-400">
             {decodeEntities(title.genre)}
           </p>
         )}

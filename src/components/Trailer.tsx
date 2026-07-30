@@ -19,7 +19,7 @@ export function Trailer({ imdbId }: { imdbId: string }) {
 
   if (trailer === undefined) {
     return (
-      <div className="aspect-video w-full animate-pulse rounded-2xl bg-neutral-200 dark:bg-neutral-800" />
+      <div className="aspect-video w-full animate-pulse rounded-2xl bg-neutral-800" />
     );
   }
 

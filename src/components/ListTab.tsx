@@ -63,7 +63,7 @@ export function ListTab({
   return (
     <div className="flex flex-col gap-3 p-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+        <h1 className="text-lg font-semibold text-neutral-100">
           {heading}
         </h1>
         <div className="flex items-center gap-2">
@@ -73,7 +73,7 @@ export function ListTab({
               disabled={rolling || items.length === 0}
               aria-label="Pick something for me"
               title="Pick something for me"
-              className="flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1.5 text-xs font-medium text-brand-800 transition-colors hover:bg-brand-100 disabled:cursor-default disabled:opacity-40 dark:bg-brand-950/50 dark:text-brand-300 dark:hover:bg-brand-900/60"
+              className="flex items-center gap-1.5 rounded-full bg-brand-950/50 px-3 py-1.5 text-xs font-medium text-brand-300 transition-colors hover:bg-brand-900/60 disabled:cursor-default disabled:opacity-40"
             >
               <Icon name="dice" className={`h-4 w-4 ${rolling ? 'animate-dice-roll' : ''}`} />
               Pick for me
@@ -94,7 +94,7 @@ export function ListTab({
           <select
             value={sortIndex}
             onChange={(e) => setSortIndex(Number(e.target.value))}
-            className="rounded-full border border-black/5 bg-white px-3 py-1.5 font-medium text-neutral-600 shadow-sm ring-1 ring-black/[0.02] dark:border-white/5 dark:bg-neutral-900 dark:text-neutral-300 dark:ring-white/[0.02]"
+            className="rounded-full border border-white/5 bg-neutral-900 px-3 py-1.5 font-medium text-neutral-300 shadow-sm ring-1 ring-white/[0.02]"
           >
             {sortOptions.map((opt, i) => (
               <option key={opt.label} value={i}>
@@ -117,7 +117,7 @@ export function ListTab({
                 className={`rounded-full px-3 py-1.5 font-medium ${
                   typeFilter === value
                     ? 'bg-brand-700 text-white'
-                    : 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300'
+                    : 'bg-neutral-800 text-neutral-300'
                 }`}
               >
                 {label}
@@ -129,7 +129,7 @@ export function ListTab({
             <select
               value={genreFilter}
               onChange={(e) => setGenreFilter(e.target.value)}
-              className="rounded-full border border-black/5 bg-white px-3 py-1.5 font-medium text-neutral-600 shadow-sm ring-1 ring-black/[0.02] dark:border-white/5 dark:bg-neutral-900 dark:text-neutral-300 dark:ring-white/[0.02]"
+              className="rounded-full border border-white/5 bg-neutral-900 px-3 py-1.5 font-medium text-neutral-300 shadow-sm ring-1 ring-white/[0.02]"
             >
               <option value="all">All genres</option>
               {genres.map((g) => (

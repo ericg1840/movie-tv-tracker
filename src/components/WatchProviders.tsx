@@ -5,7 +5,7 @@ function ProviderRow({ label, providers }: { label: string; providers?: WatchPro
   if (!providers || providers.length === 0) return null;
   return (
     <div>
-      <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400">{label}</p>
+      <p className="text-xs font-medium text-neutral-400">{label}</p>
       <div className="mt-1 flex flex-wrap gap-2">
         {providers.map((p) => (
           <img
@@ -37,13 +37,13 @@ export function WatchProviders({ imdbId }: { imdbId: string }) {
 
   if (data === undefined) {
     return (
-      <div className="flex flex-col gap-2.5 rounded-2xl border border-black/5 bg-neutral-50 p-3.5 dark:border-white/5 dark:bg-neutral-950/40">
-        <div className="h-4 w-28 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+      <div className="flex flex-col gap-2.5 rounded-2xl border border-white/5 bg-neutral-950/40 p-3.5">
+        <div className="h-4 w-28 animate-pulse rounded bg-neutral-800" />
         <div className="flex gap-2">
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className="h-11 w-11 animate-pulse rounded-xl bg-neutral-200 dark:bg-neutral-800"
+              className="h-11 w-11 animate-pulse rounded-xl bg-neutral-800"
             />
           ))}
         </div>
@@ -61,8 +61,8 @@ export function WatchProviders({ imdbId }: { imdbId: string }) {
   }
 
   return (
-    <div className="flex flex-col gap-2.5 rounded-2xl border border-black/5 bg-neutral-50 p-3.5 dark:border-white/5 dark:bg-neutral-950/40">
-      <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+    <div className="flex flex-col gap-2.5 rounded-2xl border border-white/5 bg-neutral-950/40 p-3.5">
+      <p className="text-sm font-semibold text-neutral-100">
         Where to watch
       </p>
       <ProviderRow label="Stream" providers={data.flatrate} />
@@ -72,7 +72,7 @@ export function WatchProviders({ imdbId }: { imdbId: string }) {
         href={data.link}
         target="_blank"
         rel="noreferrer"
-        className="text-xs text-brand-700 hover:underline dark:text-brand-400"
+        className="text-xs text-brand-400 hover:underline"
       >
         More info on JustWatch
       </a>
