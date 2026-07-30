@@ -1,25 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <defs>
-    <clipPath id="disc">
-      <circle cx="256" cy="256" r="186"/>
-    </clipPath>
-  </defs>
-
   <rect width="512" height="512" fill="#0B2F3F"/>
   <circle cx="256" cy="256" r="186" fill="#2DD4C4"/>
 
-  <g clip-path="url(#disc)">
-    <!-- play triangle, corners rounded by a matching stroke -->
-    <path d="M202 152 L402 256 L202 366 Z"
-          fill="#0B2F3F" stroke="#0B2F3F" stroke-width="34" stroke-linejoin="round"/>
+  <!-- play triangle, corners rounded by a matching stroke -->
+  <path d="M198 158 L366 256 L198 354 Z"
+        fill="#0B2F3F" stroke="#0B2F3F" stroke-width="40" stroke-linejoin="round"/>
 
-    <!-- teal checkmark carving the triangle into play + check -->
-    <path d="M168 244 L242 326 L420 140"
-          fill="none" stroke="#2DD4C4" stroke-width="44"
-          stroke-linecap="round" stroke-linejoin="round"/>
-
-    <!-- coral accent at the tip of the lower wedge -->
-    <path d="M340 238 L374 260 L340 282 Z"
-          fill="#FF6B6B" stroke="#FF6B6B" stroke-width="14" stroke-linejoin="round"/>
-  </g>
+  <!-- coral "tracked" badge with a checkmark, sitting on the triangle's tip -->
+  <circle cx="354" cy="332" r="70" fill="#FF6B6B" stroke="#0B2F3F" stroke-width="10"/>
+  <path d="M324 332 L344 354 L388 308"
+        fill="none" stroke="#0B2F3F" stroke-width="22"
+        stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
