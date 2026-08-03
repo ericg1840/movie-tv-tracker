@@ -1,4 +1,4 @@
-# 🎬 Movie & TV Watchlist
+# 🎬 AfterCredits
 
 A mobile-friendly personal tracker for movies/shows you want to watch, are
 watching, or have watched — plus a view for upcoming releases you're

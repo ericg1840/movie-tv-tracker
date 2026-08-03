@@ -96,7 +96,7 @@ function App() {
               <a href="./landing.html" className="flex items-center gap-1.5">
                 <img src="./favicon.svg" alt="" className="h-6 w-6 rounded-md" />
                 <span className="bg-gradient-to-r from-brand-400 to-brand-200 bg-clip-text text-transparent">
-                  Watchlist
+                  AfterCredits
                 </span>
               </a>
             </h1>
