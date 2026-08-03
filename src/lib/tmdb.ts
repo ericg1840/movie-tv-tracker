@@ -250,6 +250,7 @@ interface TmdbCombinedCreditItem {
   title?: string;
   name?: string;
   character?: string;
+  job?: string;
   release_date?: string;
   first_air_date?: string;
   poster_path: string | null;
@@ -265,7 +266,14 @@ export async function getPersonCredits(personId: number): Promise<TrendingItem[]
   if (!res.ok) return [];
 
   const data = await res.json();
-  const results: TmdbCombinedCreditItem[] = data.cast ?? [];
+  const cast: TmdbCombinedCreditItem[] = data.cast ?? [];
+  // A director's own filmography lives in `crew`, not `cast` (which for them
+  // is just rare acting cameos) — narrowed to their actual directing job so
+  // this doesn't pull in every minor crew credit (casting, sound, etc).
+  const directing: TmdbCombinedCreditItem[] = (data.crew ?? []).filter(
+    (c: TmdbCombinedCreditItem) => c.job === 'Director',
+  );
+  const results = [...cast, ...directing];
 
   const seen = new Set<string>();
   return results

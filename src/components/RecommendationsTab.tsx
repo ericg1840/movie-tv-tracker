@@ -2,14 +2,50 @@ import { useEffect, useMemo, useState } from 'react';
 import type { Title } from '../types';
 import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
-import { getSimilarTitles, getTrending, posterUrl, type TrendingItem } from '../lib/tmdb';
-import { pickSeeds, existingKeySet, notAlreadyAdded } from '../lib/recommendations';
+import {
+  getCredits,
+  getPersonCredits,
+  getSimilarTitles,
+  getTrending,
+  posterUrl,
+  type Person,
+  type TrendingItem,
+} from '../lib/tmdb';
+import {
+  pickSeeds,
+  pickTopRatedTitles,
+  existingKeySet,
+  notAlreadyAdded,
+} from '../lib/recommendations';
 import { decodeEntities } from '../lib/text';
 import { Icon } from './Icon';
 
 interface Row {
   seed: Title;
   items: TrendingItem[];
+}
+
+interface PersonRow {
+  person: Person;
+  items: TrendingItem[];
+}
+
+const MAX_PEOPLE = 3;
+
+// From each top-rated title, the director plus its top-billed actor are the
+// strongest "more like this" signal short of the title itself.
+async function collectNotablePeople(topRated: Title[]): Promise<Person[]> {
+  const credits = await Promise.all(topRated.map((t) => getCredits(t.imdb_id)));
+  const seen = new Set<number>();
+  const people: Person[] = [];
+  for (const { director, cast } of credits) {
+    for (const person of [director, cast[0]]) {
+      if (!person || seen.has(person.id)) continue;
+      seen.add(person.id);
+      people.push(person);
+    }
+  }
+  return people.slice(0, MAX_PEOPLE);
 }
 
 export function PosterRow({
@@ -67,8 +103,10 @@ export function RecommendationsTab() {
   const { openDiscover } = useDetail();
   const [rows, setRows] = useState<Row[] | undefined>(undefined);
   const [trending, setTrending] = useState<TrendingItem[] | undefined>(undefined);
+  const [personRows, setPersonRows] = useState<PersonRow[] | undefined>(undefined);
 
   const seeds = useMemo(() => pickSeeds(titles), [titles]);
+  const topRated = useMemo(() => pickTopRatedTitles(titles), [titles]);
 
   const existingKeys = useMemo(() => existingKeySet(titles), [titles]);
 
@@ -102,6 +140,34 @@ export function RecommendationsTab() {
       cancelled = true;
     };
   }, [seeds, existingKeys, loading]);
+
+  useEffect(() => {
+    if (loading) return;
+    if (topRated.length === 0) {
+      setPersonRows([]);
+      return;
+    }
+
+    let cancelled = false;
+    const keep = notAlreadyAdded(existingKeys);
+    setPersonRows(undefined);
+
+    (async () => {
+      const people = await collectNotablePeople(topRated);
+      if (cancelled) return;
+      const results = await Promise.all(
+        people.map(async (person) => ({
+          person,
+          items: (await getPersonCredits(person.id)).filter(keep),
+        })),
+      );
+      if (!cancelled) setPersonRows(results.filter((r) => r.items.length > 0));
+    })().catch(() => !cancelled && setPersonRows([]));
+
+    return () => {
+      cancelled = true;
+    };
+  }, [topRated, existingKeys, loading]);
 
   function handleSelect(item: TrendingItem) {
     openDiscover(item);
@@ -149,6 +215,16 @@ export function RecommendationsTab() {
                 <h2 className="text-sm font-semibold text-neutral-100">
                   {seed.status === 'watched' ? 'Because you watched' : 'Because you want to watch'}{' '}
                   <span className="text-brand-300">{decodeEntities(seed.title)}</span>
+                </h2>
+                <PosterRow items={items} onSelect={handleSelect} />
+              </div>
+            ))}
+
+          {personRows &&
+            personRows.map(({ person, items }) => (
+              <div key={person.id} className="flex flex-col gap-2.5">
+                <h2 className="text-sm font-semibold text-neutral-100">
+                  Because you loved <span className="text-brand-300">{person.name}</span>
                 </h2>
                 <PosterRow items={items} onSelect={handleSelect} />
               </div>

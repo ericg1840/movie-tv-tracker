@@ -328,9 +328,15 @@ function ModalShell({
     };
 
     const onTouchMove = (e: TouchEvent) => {
+      // If content fits without scrolling, scrollTop<=0 and
+      // scrollTop+clientHeight>=scrollHeight are both trivially true at once,
+      // which would treat every drag as "at the boundary" and block all
+      // touch scrolling in the panel. Only the actually-scrollable case needs
+      // the bounce guard at all.
+      if (el.scrollHeight <= el.clientHeight + 1) return;
       const deltaY = e.touches[0].clientY - startY;
       const atTop = el.scrollTop <= 0;
-      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight;
+      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
       if ((atTop && deltaY > 0) || (atBottom && deltaY < 0)) {
         e.preventDefault();
       }
@@ -673,24 +679,12 @@ function PersonDetail({ person }: { person: Person }) {
   }, [person.id]);
 
   return (
-    <ModalShell poster={null} title={person.name} badges="" onClose={close}>
-      <div className="flex flex-col items-center gap-3 pb-2 text-center">
-        <div className="h-24 w-24 overflow-hidden rounded-full bg-neutral-800">
-          {person.profile_path ? (
-            <img
-              src={profileUrl(person.profile_path)}
-              alt=""
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-neutral-500">
-              <Icon name="user" className="h-10 w-10" />
-            </div>
-          )}
-        </div>
-        <h2 className="text-lg font-bold text-neutral-100">{person.name}</h2>
-      </div>
-
+    <ModalShell
+      poster={person.profile_path ? profileUrl(person.profile_path) : null}
+      title={person.name}
+      badges=""
+      onClose={close}
+    >
       <div className="flex flex-col gap-2.5">
         <h3 className="text-sm font-semibold text-neutral-100">Appears in</h3>
         {items === undefined && <p className="text-sm text-neutral-500">Loading…</p>}

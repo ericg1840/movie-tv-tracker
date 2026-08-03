@@ -22,6 +22,18 @@ export function pickSeeds(titles: Title[]): Title[] {
   return [...rated, ...watchlist, ...unrated].slice(0, MAX_SEEDS);
 }
 
+/**
+ * Titles to pull directors/cast from for "Because you loved [person]" rows —
+ * just the highest-rated watched titles, since a low rating isn't a signal
+ * you want more from whoever made it.
+ */
+export function pickTopRatedTitles(titles: Title[], limit = 2): Title[] {
+  return titles
+    .filter((t) => t.status === 'watched' && t.my_rating != null)
+    .sort((a, b) => (b.my_rating ?? 0) - (a.my_rating ?? 0))
+    .slice(0, limit);
+}
+
 // Our titles table keys off imdb_id, but TMDB's recommendation/trending
 // endpoints only return TMDB ids, so cross-referencing by id would mean an
 // extra API call per result. Title+year is cheap and close enough to dedupe
