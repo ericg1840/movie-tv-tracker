@@ -10,7 +10,7 @@ export type IconName =
   | 'chart'
   | 'sparkle'
   | 'eye'
-  | 'home';
+  | 'user';
 
 const PATHS: Record<IconName, ReactNode> = {
   search: (
@@ -66,10 +66,10 @@ const PATHS: Record<IconName, ReactNode> = {
       <circle cx="12" cy="12" r="3" />
     </>
   ),
-  home: (
+  user: (
     <>
-      <path d="M3.75 10.5 12 3.75l8.25 6.75" />
-      <path d="M5.75 9.25v10.5a.5.5 0 0 0 .5.5H9.5v-6h5v6h3.25a.5.5 0 0 0 .5-.5V9.25" />
+      <circle cx="12" cy="8" r="3.5" />
+      <path d="M4.75 19.25c1.2-3.6 4-5.5 7.25-5.5s6.05 1.9 7.25 5.5" />
     </>
   ),
 };
