@@ -1,17 +1,19 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 import type { OmdbSearchItem, Title } from '../types';
-import type { TrendingItem } from '../lib/tmdb';
+import type { Person, TrendingItem } from '../lib/tmdb';
 
 export type DetailTarget =
   | { kind: 'stored'; title: Title }
   | { kind: 'search'; item: OmdbSearchItem }
-  | { kind: 'discover'; item: TrendingItem };
+  | { kind: 'discover'; item: TrendingItem }
+  | { kind: 'person'; person: Person };
 
 interface DetailContextValue {
   target: DetailTarget | null;
   openStored: (title: Title) => void;
   openSearch: (item: OmdbSearchItem) => void;
   openDiscover: (item: TrendingItem) => void;
+  openPerson: (person: Person) => void;
   close: () => void;
 }
 
@@ -26,6 +28,7 @@ export function DetailProvider({ children }: { children: ReactNode }) {
       openStored: (title) => setTarget({ kind: 'stored', title }),
       openSearch: (item) => setTarget({ kind: 'search', item }),
       openDiscover: (item) => setTarget({ kind: 'discover', item }),
+      openPerson: (person) => setTarget({ kind: 'person', person }),
       close: () => setTarget(null),
     }),
     [target],

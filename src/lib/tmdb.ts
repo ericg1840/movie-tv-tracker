@@ -187,6 +187,111 @@ export async function getSeasons(imdbId: string): Promise<Season[]> {
   return seasons.filter((s) => s.season_number > 0);
 }
 
+export interface Person {
+  id: number;
+  name: string;
+  profile_path: string | null;
+}
+
+export interface Credits {
+  director: Person | null;
+  cast: Person[];
+}
+
+export function profileUrl(path: string): string {
+  return `https://image.tmdb.org/t/p/w185${path}`;
+}
+
+interface TmdbCastMember {
+  id: number;
+  name: string;
+  profile_path: string | null;
+  order: number;
+}
+
+interface TmdbCrewMember {
+  id: number;
+  name: string;
+  profile_path: string | null;
+  job: string;
+}
+
+const MAX_CAST = 10;
+
+export async function getCredits(imdbId: string): Promise<Credits> {
+  const target = await findTmdbTarget(imdbId);
+  if (!target) return { director: null, cast: [] };
+
+  const res = await fetch(`${BASE_URL}/${target.mediaType}/${target.id}/credits?api_key=${apiKey}`);
+  if (!res.ok) return { director: null, cast: [] };
+
+  const data = await res.json();
+  const crew: TmdbCrewMember[] = data.crew ?? [];
+  const cast: TmdbCastMember[] = data.cast ?? [];
+
+  const directorCrew = crew.find((c) => c.job === 'Director') ?? null;
+  const director = directorCrew
+    ? { id: directorCrew.id, name: directorCrew.name, profile_path: directorCrew.profile_path }
+    : null;
+
+  return {
+    director,
+    cast: cast
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .slice(0, MAX_CAST)
+      .map((c) => ({ id: c.id, name: c.name, profile_path: c.profile_path })),
+  };
+}
+
+interface TmdbCombinedCreditItem {
+  id: number;
+  media_type: 'movie' | 'tv';
+  title?: string;
+  name?: string;
+  character?: string;
+  release_date?: string;
+  first_air_date?: string;
+  poster_path: string | null;
+  popularity: number;
+}
+
+// Talk-show/awards-show cameos where someone appears "as themselves" clutter
+// a person's credits without being an actual role, so they're filtered out.
+const SELF_CHARACTER = /^\s*(himself|herself|self|themselves)\b/i;
+
+export async function getPersonCredits(personId: number): Promise<TrendingItem[]> {
+  const res = await fetch(`${BASE_URL}/person/${personId}/combined_credits?api_key=${apiKey}`);
+  if (!res.ok) return [];
+
+  const data = await res.json();
+  const results: TmdbCombinedCreditItem[] = data.cast ?? [];
+
+  const seen = new Set<string>();
+  return results
+    .filter(
+      (r) =>
+        r.poster_path &&
+        (r.media_type === 'movie' || r.media_type === 'tv') &&
+        !SELF_CHARACTER.test(r.character ?? ''),
+    )
+    .sort((a, b) => b.popularity - a.popularity)
+    .filter((r) => {
+      const key = `${r.media_type}-${r.id}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, 20)
+    .map((r) => ({
+      id: r.id,
+      media_type: r.media_type,
+      title: r.title ?? r.name ?? 'Untitled',
+      year: (r.release_date ?? r.first_air_date ?? '').slice(0, 4) || null,
+      poster_path: r.poster_path,
+    }));
+}
+
 export async function getSeasonEpisodes(
   imdbId: string,
   seasonNumber: number,

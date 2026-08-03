@@ -1,7 +1,17 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import type { OmdbDetail, Title } from '../types';
 import { getTitleDetail } from '../lib/omdb';
-import { getImdbId, getSimilarTitles, posterUrl, type TrendingItem } from '../lib/tmdb';
+import {
+  getCredits,
+  getImdbId,
+  getPersonCredits,
+  getSimilarTitles,
+  posterUrl,
+  profileUrl,
+  type Credits,
+  type Person,
+  type TrendingItem,
+} from '../lib/tmdb';
 import { useBodyScrollLock } from '../lib/useBodyScrollLock';
 import { decodeEntities } from '../lib/text';
 import { useTitles } from '../context/TitlesContext';
@@ -10,6 +20,7 @@ import { StatusActions } from './StatusActions';
 import { SeasonTracker } from './SeasonTracker';
 import { WatchProviders } from './WatchProviders';
 import { Trailer } from './Trailer';
+import { PosterRow } from './RecommendationsTab';
 import { Icon } from './Icon';
 
 function Field({ label, value }: { label: string; value: string | null | undefined }) {
@@ -64,6 +75,88 @@ function ExpandablePlot({ text: rawText }: { text: string }) {
         </button>
       )}
     </p>
+  );
+}
+
+function CastRow({
+  imdbId,
+  fallbackDirector,
+  fallbackActors,
+}: {
+  imdbId: string;
+  fallbackDirector?: string | null;
+  fallbackActors?: string | null;
+}) {
+  const { openPerson } = useDetail();
+  const [credits, setCredits] = useState<Credits | undefined>(undefined);
+
+  useEffect(() => {
+    let cancelled = false;
+    setCredits(undefined);
+    getCredits(imdbId)
+      .then((c) => !cancelled && setCredits(c))
+      .catch(() => !cancelled && setCredits({ director: null, cast: [] }));
+    return () => {
+      cancelled = true;
+    };
+  }, [imdbId]);
+
+  if (credits === undefined) {
+    return (
+      <div className="flex gap-3 overflow-x-auto pb-1">
+        {Array.from({ length: 5 }, (_, i) => (
+          <div key={i} className="h-16 w-16 shrink-0 animate-pulse rounded-full bg-neutral-800" />
+        ))}
+      </div>
+    );
+  }
+
+  const people = [
+    ...(credits.director ? [{ person: credits.director, role: 'Director' }] : []),
+    ...credits.cast.map((person) => ({ person, role: undefined as string | undefined })),
+  ];
+
+  if (people.length === 0) {
+    return (
+      <>
+        <Field label="Director" value={fallbackDirector} />
+        <Field label="Starring" value={fallbackActors} />
+      </>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      <h3 className="text-sm font-semibold text-neutral-100">Cast &amp; crew</h3>
+      <div className="flex gap-3 overflow-x-auto pb-1">
+        {people.map(({ person, role }) => (
+          <button
+            key={`${role ?? 'cast'}-${person.id}`}
+            onClick={() => openPerson(person)}
+            className="flex w-16 shrink-0 flex-col items-center gap-1 text-center"
+          >
+            <div className="h-16 w-16 overflow-hidden rounded-full bg-neutral-800">
+              {person.profile_path ? (
+                <img
+                  src={profileUrl(person.profile_path)}
+                  alt=""
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-neutral-500">
+                  <Icon name="user" className="h-7 w-7" />
+                </div>
+              )}
+            </div>
+            <span className="w-full truncate text-[11px] font-medium text-neutral-300">
+              {person.name}
+            </span>
+            {role && <span className="text-[10px] text-neutral-500">{role}</span>}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -403,8 +496,7 @@ function StoredDetail({ title }: { title: Title }) {
       <Trailer imdbId={live.imdb_id} />
 
       <GenreTags value={live.genre} />
-      <Field label="Director" value={live.director} />
-      <Field label="Starring" value={live.actors} />
+      <CastRow imdbId={live.imdb_id} fallbackDirector={live.director} fallbackActors={live.actors} />
       {live.plot && <ExpandablePlot text={live.plot} />}
 
       {live.media_type === 'series' && <SeasonTracker title={live} />}
@@ -496,8 +588,7 @@ function SearchDetail({ imdbId }: { imdbId: string }) {
       <Trailer imdbId={imdbId} />
 
       <GenreTags value={detail.Genre} />
-      <Field label="Director" value={detail.Director} />
-      <Field label="Starring" value={detail.Actors} />
+      <CastRow imdbId={imdbId} fallbackDirector={detail.Director} fallbackActors={detail.Actors} />
       {detail.Plot && detail.Plot !== 'N/A' && <ExpandablePlot text={detail.Plot} />}
 
       <WatchProviders imdbId={imdbId} />
@@ -566,10 +657,57 @@ function DiscoverDetail({ item }: { item: TrendingItem }) {
   return <SearchDetail imdbId={imdbId} />;
 }
 
+function PersonDetail({ person }: { person: Person }) {
+  const { close, openDiscover } = useDetail();
+  const [items, setItems] = useState<TrendingItem[] | undefined>(undefined);
+
+  useEffect(() => {
+    let cancelled = false;
+    setItems(undefined);
+    getPersonCredits(person.id)
+      .then((r) => !cancelled && setItems(r))
+      .catch(() => !cancelled && setItems([]));
+    return () => {
+      cancelled = true;
+    };
+  }, [person.id]);
+
+  return (
+    <ModalShell poster={null} title={person.name} badges="" onClose={close}>
+      <div className="flex flex-col items-center gap-3 pb-2 text-center">
+        <div className="h-24 w-24 overflow-hidden rounded-full bg-neutral-800">
+          {person.profile_path ? (
+            <img
+              src={profileUrl(person.profile_path)}
+              alt=""
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-neutral-500">
+              <Icon name="user" className="h-10 w-10" />
+            </div>
+          )}
+        </div>
+        <h2 className="text-lg font-bold text-neutral-100">{person.name}</h2>
+      </div>
+
+      <div className="flex flex-col gap-2.5">
+        <h3 className="text-sm font-semibold text-neutral-100">Appears in</h3>
+        {items === undefined && <p className="text-sm text-neutral-500">Loading…</p>}
+        {items && items.length === 0 && (
+          <p className="text-sm text-neutral-500">Nothing else found.</p>
+        )}
+        {items && items.length > 0 && <PosterRow items={items} onSelect={openDiscover} />}
+      </div>
+    </ModalShell>
+  );
+}
+
 export function DetailModal() {
   const { target } = useDetail();
   if (!target) return null;
   if (target.kind === 'stored') return <StoredDetail title={target.title} />;
   if (target.kind === 'discover') return <DiscoverDetail item={target.item} />;
+  if (target.kind === 'person') return <PersonDetail person={target.person} />;
   return <SearchDetail imdbId={target.item.imdbID} />;
 }
