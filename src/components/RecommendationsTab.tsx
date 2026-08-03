@@ -3,25 +3,16 @@ import type { Title } from '../types';
 import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
 import { getSimilarTitles, getTrending, posterUrl, type TrendingItem } from '../lib/tmdb';
+import { pickSeeds, existingKeySet, notAlreadyAdded } from '../lib/recommendations';
 import { decodeEntities } from '../lib/text';
 import { Icon } from './Icon';
-
-const MAX_SEEDS = 5;
 
 interface Row {
   seed: Title;
   items: TrendingItem[];
 }
 
-// Our titles table keys off imdb_id, but TMDB's recommendation/trending
-// endpoints only return TMDB ids, so cross-referencing by id would mean an
-// extra API call per result. Title+year is cheap and close enough to dedupe
-// against what's already in the list.
-function dedupeKey(title: string, year: string | null): string {
-  return `${decodeEntities(title).trim().toLowerCase()}|${year ?? ''}`;
-}
-
-function PosterRow({
+export function PosterRow({
   items,
   onSelect,
 }: {
@@ -77,36 +68,20 @@ export function RecommendationsTab() {
   const [rows, setRows] = useState<Row[] | undefined>(undefined);
   const [trending, setTrending] = useState<TrendingItem[] | undefined>(undefined);
 
-  const seeds = useMemo(() => {
-    const watched = titles.filter((t) => t.status === 'watched');
-    const rated = watched
-      .filter((t) => t.my_rating != null)
-      .sort((a, b) => (b.my_rating ?? 0) - (a.my_rating ?? 0));
-    const unrated = watched.filter((t) => t.my_rating == null);
-    // Watchlist entries (incl. upcoming releases, which are just watchlist
-    // items with a future released_on) are a taste signal too, not just
-    // what's already been watched.
-    const watchlist = titles
-      .filter((t) => t.status === 'want_to_watch' || t.status === 'watching')
-      .sort((a, b) => b.added_at.localeCompare(a.added_at));
-    return [...rated, ...watchlist, ...unrated].slice(0, MAX_SEEDS);
-  }, [titles]);
+  const seeds = useMemo(() => pickSeeds(titles), [titles]);
 
-  const existingKeys = useMemo(
-    () => new Set(titles.map((t) => dedupeKey(t.title, t.year))),
-    [titles],
-  );
+  const existingKeys = useMemo(() => existingKeySet(titles), [titles]);
 
   useEffect(() => {
     if (loading) return;
 
     let cancelled = false;
-    const notAlreadyAdded = (item: TrendingItem) => !existingKeys.has(dedupeKey(item.title, item.year));
+    const keep = notAlreadyAdded(existingKeys);
 
     if (seeds.length === 0) {
       setRows(undefined);
       getTrending()
-        .then((items) => !cancelled && setTrending(items.filter(notAlreadyAdded)))
+        .then((items) => !cancelled && setTrending(items.filter(keep)))
         .catch(() => !cancelled && setTrending([]));
       return () => {
         cancelled = true;
@@ -117,7 +92,7 @@ export function RecommendationsTab() {
     Promise.all(
       seeds.map(async (seed) => ({
         seed,
-        items: (await getSimilarTitles(seed.imdb_id)).filter(notAlreadyAdded),
+        items: (await getSimilarTitles(seed.imdb_id)).filter(keep),
       })),
     )
       .then((results) => !cancelled && setRows(results.filter((r) => r.items.length > 0)))

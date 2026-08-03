@@ -8,11 +8,14 @@ import { ListTab } from './components/ListTab';
 import { DetailModal } from './components/DetailModal';
 import { StatsTab } from './components/StatsTab';
 import { RecommendationsTab } from './components/RecommendationsTab';
+import { HomeTab } from './components/HomeTab';
 import { todayIso as today } from './lib/dates';
 import type { Tab } from './lib/tabs';
 
-function TabContent({ tab }: { tab: Tab }) {
+function TabContent({ tab, onNavigate }: { tab: Tab; onNavigate: (tab: Tab) => void }) {
   switch (tab) {
+    case 'home':
+      return <HomeTab onNavigate={onNavigate} />;
     case 'search':
       return <SearchTab />;
     case 'watchlist':
@@ -85,7 +88,7 @@ function TabContent({ tab }: { tab: Tab }) {
 }
 
 function App() {
-  const [tab, setTab] = useState<Tab>('watchlist');
+  const [tab, setTab] = useState<Tab>('home');
 
   return (
     <TitlesProvider>
@@ -107,7 +110,7 @@ function App() {
 
             <main className="min-w-0 flex-1 pb-2">
               <div key={tab} className="animate-tab-in mx-auto max-w-lg md:max-w-none">
-                <TabContent tab={tab} />
+                <TabContent tab={tab} onNavigate={setTab} />
               </div>
             </main>
           </div>

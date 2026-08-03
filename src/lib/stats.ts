@@ -71,3 +71,24 @@ export function computeStats(titles: Title[]): Stats {
     topRated,
   };
 }
+
+export interface MonthStats {
+  watchedCount: number;
+  avgRating: number | null;
+}
+
+export function computeMonthStats(titles: Title[], now: Date = new Date()): MonthStats {
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const watchedThisMonth = titles.filter(
+    (t) =>
+      t.status === 'watched' &&
+      t.watched_at &&
+      new Date(t.watched_at).getFullYear() === year &&
+      new Date(t.watched_at).getMonth() === month,
+  );
+  const rated = watchedThisMonth.filter((t): t is Title & { my_rating: number } => t.my_rating != null);
+  const avgRating = rated.length > 0 ? rated.reduce((s, t) => s + t.my_rating, 0) / rated.length : null;
+
+  return { watchedCount: watchedThisMonth.length, avgRating };
+}
