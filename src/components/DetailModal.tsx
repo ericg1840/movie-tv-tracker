@@ -330,10 +330,31 @@ function ModalShell({
           </div>
         </div>
 
-        {/* Desktop poster column, full modal height instead of the mobile wash. */}
-        <div className="hidden shrink-0 bg-neutral-950 md:block md:h-full md:w-72 lg:w-80">
+        {/*
+         * Desktop poster column. The column's aspect ratio is much taller/
+         * narrower than a poster's natural 2:3, so object-cover here would
+         * crop it down to a thin sliver. Instead: a blurred, scaled copy of
+         * the poster fills the column (same trick the mobile wash uses),
+         * with the full uncropped poster centered on top of it.
+         */}
+        <div className="relative hidden shrink-0 overflow-hidden bg-neutral-950 md:block md:h-full md:w-72 lg:w-80">
           {poster ? (
-            <img src={poster} alt={title} className="h-full w-full object-cover" />
+            <>
+              <img
+                src={poster}
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 h-full w-full scale-125 object-cover opacity-40 blur-2xl"
+              />
+              <div className="absolute inset-0 bg-neutral-950/30" />
+              <div className="relative flex h-full w-full min-w-0 items-center justify-center p-6">
+                <img
+                  src={poster}
+                  alt={title}
+                  className="min-h-0 min-w-0 max-h-full max-w-full rounded-lg object-contain shadow-2xl"
+                />
+              </div>
+            </>
           ) : (
             <div className="flex h-full w-full items-center justify-center text-neutral-400">
               <Icon name="film" className="h-10 w-10" />
