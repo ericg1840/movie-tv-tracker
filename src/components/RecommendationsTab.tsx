@@ -34,14 +34,15 @@ function PosterRow({
         <button
           key={`${item.media_type}-${item.id}`}
           onClick={() => onSelect(item)}
-          className="flex w-28 min-w-0 shrink-0 flex-col gap-1.5 text-left"
+          aria-label={`View details for ${item.title}`}
+          className="group flex w-28 min-w-0 shrink-0 flex-col gap-1.5 text-left"
         >
-          <div className="aspect-[2/3] w-full overflow-hidden rounded-xl bg-neutral-800 shadow-sm">
+          <div className="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-neutral-800 shadow-sm ring-1 ring-transparent transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-lg group-hover:shadow-brand-900/40 group-hover:ring-brand-500/40">
             {item.poster_path ? (
               <img
                 src={posterUrl(item.poster_path)}
                 alt=""
-                className="h-full w-full object-cover"
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
                 loading="lazy"
               />
             ) : (
@@ -49,6 +50,12 @@ function PosterRow({
                 <Icon name="film" className="h-6 w-6" />
               </div>
             )}
+            <div className="pointer-events-none absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/70 via-black/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <span className="mb-1.5 flex items-center gap-1 rounded-full bg-black/40 px-1.5 py-0.5 text-[9px] font-semibold text-white backdrop-blur-sm">
+                <Icon name="eye" className="h-2.5 w-2.5" />
+                View details
+              </span>
+            </div>
           </div>
           <p className="w-full min-w-0 truncate text-xs font-medium text-neutral-200">
             {item.title}
