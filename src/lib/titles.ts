@@ -4,7 +4,7 @@ import type { NewTitle, OmdbDetail, Status, Title } from '../types';
 
 const clean = (value: string | undefined) => (value && value !== 'N/A' ? value : null);
 
-function detailToFields(detail: OmdbDetail) {
+export function detailToFields(detail: OmdbDetail) {
   return {
     imdb_id: detail.imdbID,
     title: detail.Title,
