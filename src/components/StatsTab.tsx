@@ -71,7 +71,7 @@ export function StatsTab() {
     );
   }
 
-  const hasSidebar = stats.watchedCount > 0 && (stats.topGenres.length > 0 || !!stats.topRated);
+  const hasSidebar = stats.watchedCount > 0 && (stats.topGenres.length > 0 || stats.topRatedList.length > 0);
 
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -129,32 +129,34 @@ export function StatsTab() {
               </div>
             )}
 
-            {stats.topRated && (
-              <button
-                onClick={() => openStored(stats.topRated!)}
-                className="flex items-center gap-3 rounded-2xl border border-white/5 bg-neutral-900 p-3 text-left shadow-sm ring-1 ring-white/[0.02] transition-shadow hover:shadow-md"
-              >
-                <div className="aspect-[2/3] h-20 shrink-0 overflow-hidden rounded-lg bg-neutral-800">
-                  {stats.topRated.poster_url && (
-                    <img
-                      src={stats.topRated.poster_url}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
-                  )}
+            {stats.topRatedList.length > 0 && (
+              <div className="flex flex-col gap-2.5 rounded-2xl border border-white/5 bg-neutral-900 p-4 shadow-sm ring-1 ring-white/[0.02]">
+                <h2 className="text-sm font-semibold text-neutral-100">Your top rated</h2>
+                <div className="flex flex-col gap-1">
+                  {stats.topRatedList.map((title, i) => (
+                    <button
+                      key={title.id}
+                      onClick={() => openStored(title)}
+                      className="flex items-center gap-3 rounded-xl p-1.5 text-left transition-colors hover:bg-neutral-800"
+                    >
+                      <span className="w-4 shrink-0 text-center text-sm font-bold text-neutral-600">
+                        {i + 1}
+                      </span>
+                      <div className="aspect-[2/3] h-12 shrink-0 overflow-hidden rounded-md bg-neutral-800">
+                        {title.poster_url && (
+                          <img src={title.poster_url} alt="" className="h-full w-full object-cover" />
+                        )}
+                      </div>
+                      <span className="min-w-0 flex-1 truncate text-sm font-medium text-neutral-200">
+                        {decodeEntities(title.title)}
+                      </span>
+                      <span className="shrink-0 text-xs font-semibold text-brand-300">
+                        ⭐ {title.my_rating}
+                      </span>
+                    </button>
+                  ))}
                 </div>
-                <div className="flex min-w-0 flex-col gap-0.5">
-                  <span className="text-xs font-medium text-neutral-400">
-                    Your top rated
-                  </span>
-                  <span className="truncate text-sm font-semibold text-neutral-100">
-                    {decodeEntities(stats.topRated.title)}
-                  </span>
-                  <span className="text-xs text-neutral-400">
-                    ⭐ {stats.topRated.my_rating}/10
-                  </span>
-                </div>
-              </button>
+              </div>
             )}
           </div>
         )}

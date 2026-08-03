@@ -3,7 +3,7 @@ import type { Title } from '../types';
 import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
 import { decodeEntities } from '../lib/text';
-import { todayIso } from '../lib/dates';
+import { daysUntil, todayIso } from '../lib/dates';
 import { StatusActions } from './StatusActions';
 import { Icon } from './Icon';
 
@@ -164,6 +164,16 @@ export function TitleCard({ title }: { title: Title }) {
           ) : (
             <div className="flex h-full w-full items-center justify-center text-neutral-400">
               <Icon name="film" className="h-7 w-7" />
+            </div>
+          )}
+          {isUpcoming && title.released_on && (
+            <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-black/80 to-transparent px-2 pb-3 pt-1.5">
+              <span className="block text-xl font-extrabold leading-none text-accent-400">
+                {daysUntil(title.released_on)}
+              </span>
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-accent-100/90">
+                {daysUntil(title.released_on) === 1 ? 'day' : 'days'}
+              </span>
             </div>
           )}
           <div className="pointer-events-none absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/70 via-black/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">

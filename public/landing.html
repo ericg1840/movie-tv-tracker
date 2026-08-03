@@ -410,6 +410,92 @@
       .widget.g5 { background: linear-gradient(155deg, #0e7490, #083344); }
       .widget.g6 { background: linear-gradient(155deg, #7c3aed, #2e1065); }
 
+      /* ---------- Section: stats showcase ---------- */
+      .stats-card {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+        gap: 28px;
+        align-items: center;
+        padding: 32px;
+      }
+      /* Grid items default to min-width: auto, so a long unbreakable title
+         (e.g. "Star Wars: The Mandalorian and Grogu") can force the whole
+         card wider instead of being clipped by the ellipsis rule below. */
+      .stats-card > * {
+        min-width: 0;
+      }
+      @media (max-width: 760px) {
+        .stats-card {
+          grid-template-columns: 1fr;
+          padding: 24px;
+        }
+      }
+      .stat-row {
+        display: flex;
+        gap: 28px;
+        margin-bottom: 28px;
+      }
+      .stat-row .stat b {
+        display: block;
+        font-size: clamp(30px, 4vw, 40px);
+        font-weight: 800;
+        line-height: 1;
+        background: linear-gradient(135deg, var(--brand), var(--brand-light));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .stat-row .stat span {
+        display: block;
+        margin-top: 6px;
+        font-size: 13px;
+        color: var(--text-dim);
+      }
+      .top-rated {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .top-rated .row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px;
+        border-radius: 12px;
+        min-width: 0;
+      }
+      .top-rated .row:hover {
+        background: var(--panel-2);
+      }
+      .top-rated .rank {
+        width: 16px;
+        text-align: center;
+        font-weight: 800;
+        color: var(--text-dim);
+        font-size: 14px;
+      }
+      .top-rated .poster {
+        width: 34px;
+        height: 51px;
+        border-radius: 6px;
+        flex-shrink: 0;
+      }
+      .top-rated .name {
+        flex: 1;
+        min-width: 0;
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .top-rated .score {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--brand-light);
+        flex-shrink: 0;
+      }
+
       .feature-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -703,6 +789,65 @@
             <svg class="ic" viewBox="0 0 24 24"><rect x="3.25" y="4.25" width="17.5" height="15.5" rx="2.25"/><path d="M8.25 4.25v15.5M15.75 4.25v15.5M3.25 12h17.5M3.25 8.25h5M3.25 15.75h5M15.75 8.25h5M15.75 15.75h5" /></svg>
             <h3>Full details &amp; trailers</h3>
             <p>Director, cast, synopsis, and the official trailer — right in the app.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="block-head">
+          <h2>Your year in watching, at a glance</h2>
+          <p>
+            Every title you finish rolls up into simple stats — what you've watched, how much
+            time it took, and the titles you rated best.
+          </p>
+        </div>
+
+        <div class="card stats-card">
+          <div>
+            <div class="stat-row">
+              <div class="stat">
+                <b>47</b>
+                <span>Watched</span>
+              </div>
+              <div class="stat">
+                <b>8.4</b>
+                <span>Average rating</span>
+              </div>
+              <div class="stat">
+                <b>62h</b>
+                <span>Movie hours</span>
+              </div>
+            </div>
+            <p style="font-size: 14px; color: var(--text-dim); line-height: 1.6; margin: 0;">
+              Backlog time, top genres, and a running average of the ratings you give — all
+              computed from your own list, nothing tracked or shared.
+            </p>
+          </div>
+          <div class="top-rated">
+            <div class="row">
+              <span class="rank">1</span>
+              <div class="poster" style="background: linear-gradient(160deg, #fbbf24, #f97316);"></div>
+              <span class="name">The Odyssey</span>
+              <span class="score">⭐ 9</span>
+            </div>
+            <div class="row">
+              <span class="rank">2</span>
+              <div class="poster" style="background: linear-gradient(160deg, #2dd4c4, #0f766e);"></div>
+              <span class="name">Toy Story 5</span>
+              <span class="score">⭐ 8</span>
+            </div>
+            <div class="row">
+              <span class="rank">3</span>
+              <div class="poster" style="background: linear-gradient(160deg, #6366f1, #0ea5e9);"></div>
+              <span class="name">Obsession</span>
+              <span class="score">⭐ 8</span>
+            </div>
+            <div class="row">
+              <span class="rank">4</span>
+              <div class="poster" style="background: linear-gradient(160deg, #a78bfa, #6366f1);"></div>
+              <span class="name">Star Wars: The Mandalorian and Grogu</span>
+              <span class="score">⭐ 7</span>
+            </div>
           </div>
         </div>
       </section>

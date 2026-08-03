@@ -1,6 +1,6 @@
 import type { Title } from '../types';
 import { useTitles } from '../context/TitlesContext';
-import { daysUntil, formatDate, todayIso } from '../lib/dates';
+import { formatDate, todayIso } from '../lib/dates';
 
 function RatingPicker({ title }: { title: Title }) {
   const { setRating } = useTitles();
@@ -34,17 +34,9 @@ export function StatusActions({ title }: { title: Title }) {
   const { setStatus } = useTitles();
 
   if (title.released_on && title.released_on > todayIso()) {
-    const days = daysUntil(title.released_on);
     return (
-      <div className="flex items-center gap-2 rounded-lg bg-accent-950/50 px-3 py-2">
-        <span className="text-lg font-bold leading-none text-accent-400">
-          {days}
-        </span>
-        <span className="text-xs leading-tight text-accent-400">
-          {days === 1 ? 'day' : 'days'} until release
-          <br />
-          {formatDate(title.released_on)}
-        </span>
+      <div className="rounded-lg bg-accent-950/50 px-3 py-2 text-xs font-medium text-accent-400">
+        Releases {formatDate(title.released_on)}
       </div>
     );
   }

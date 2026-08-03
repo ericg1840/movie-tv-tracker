@@ -20,6 +20,7 @@ export interface Stats {
   movieHours: number;
   topGenres: [string, number][];
   topRated: (Title & { my_rating: number }) | null;
+  topRatedList: (Title & { my_rating: number })[];
 }
 
 export function computeStats(titles: Title[]): Stats {
@@ -55,6 +56,7 @@ export function computeStats(titles: Title[]): Stats {
   const topGenres = Array.from(genreCounts.entries()).sort((a, b) => b[1] - a[1]).slice(0, 6);
 
   const topRated = rated.length > 0 ? rated.reduce((a, b) => (b.my_rating > a.my_rating ? b : a)) : null;
+  const topRatedList = [...rated].sort((a, b) => b.my_rating - a.my_rating).slice(0, 5);
 
   return {
     watchedCount: watched.length,
@@ -69,6 +71,7 @@ export function computeStats(titles: Title[]): Stats {
     movieHours: movieMinutes / 60,
     topGenres,
     topRated,
+    topRatedList,
   };
 }
 
