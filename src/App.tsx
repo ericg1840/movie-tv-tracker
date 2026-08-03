@@ -69,7 +69,7 @@ function App() {
       <DetailProvider>
         <div className="flex min-h-dvh flex-col bg-neutral-950">
           <header className="sticky top-0 z-10 border-b border-white/5 bg-neutral-950/95 px-4 pb-3 pt-[calc(env(safe-area-inset-top)+0.75rem)] backdrop-blur">
-            <h1 className="mx-auto flex max-w-6xl items-center text-lg font-extrabold tracking-tight text-neutral-100">
+            <h1 className="mx-auto flex max-w-6xl items-center text-lg font-extrabold tracking-tight text-neutral-100 2xl:max-w-[1440px]">
               <a href="./landing.html" className="flex items-center gap-1.5">
                 <img src="./favicon.svg" alt="" className="h-6 w-6 rounded-md" />
                 <span className="bg-gradient-to-r from-brand-400 to-brand-200 bg-clip-text text-transparent">
@@ -79,7 +79,7 @@ function App() {
             </h1>
           </header>
 
-          <div className="mx-auto flex w-full max-w-6xl flex-1">
+          <div className="mx-auto flex w-full max-w-6xl flex-1 2xl:max-w-[1440px]">
             <Sidebar active={tab} onChange={setTab} />
 
             <main className="min-w-0 flex-1 pb-2">
