@@ -6,7 +6,7 @@ function RatingPicker({ title }: { title: Title }) {
   const { setRating } = useTitles();
 
   return (
-    <div className="flex flex-wrap items-center gap-1">
+    <div className="flex flex-nowrap items-center gap-1 overflow-x-auto">
       {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => {
         const active = title.my_rating === n;
         return (
@@ -16,7 +16,7 @@ function RatingPicker({ title }: { title: Title }) {
             onClick={() => setRating(title.id, active ? null : n)}
             aria-pressed={active}
             aria-label={`Rate ${n} out of 10`}
-            className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-medium transition-colors ${
+            className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-medium transition-colors ${
               active
                 ? 'bg-brand-700 text-white'
                 : 'border border-white/10 text-neutral-300 hover:bg-neutral-800'
