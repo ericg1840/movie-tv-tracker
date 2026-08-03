@@ -181,7 +181,7 @@ export function ListTab({
         <p className="text-sm text-neutral-500">Nothing matches those filters.</p>
       )}
 
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {items.map((title) => (
           <TitleCard key={title.id} title={title} />
         ))}

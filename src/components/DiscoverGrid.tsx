@@ -33,7 +33,7 @@ export function DiscoverGrid({ type }: { type?: 'movie' | 'series' }) {
       {loading && <p className="text-sm text-neutral-500">Loading…</p>}
       {error && <p className="text-sm text-red-500">{error}</p>}
 
-      <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6">
+      <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
         {items.map((item) => (
           <button
             key={`${item.media_type}-${item.id}`}
