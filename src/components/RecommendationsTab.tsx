@@ -63,7 +63,13 @@ export function RecommendationsTab() {
       .filter((t) => t.my_rating != null)
       .sort((a, b) => (b.my_rating ?? 0) - (a.my_rating ?? 0));
     const unrated = watched.filter((t) => t.my_rating == null);
-    return [...rated, ...unrated].slice(0, MAX_SEEDS);
+    // Watchlist entries (incl. upcoming releases, which are just watchlist
+    // items with a future released_on) are a taste signal too, not just
+    // what's already been watched.
+    const watchlist = titles
+      .filter((t) => t.status === 'want_to_watch' || t.status === 'watching')
+      .sort((a, b) => b.added_at.localeCompare(a.added_at));
+    return [...rated, ...watchlist, ...unrated].slice(0, MAX_SEEDS);
   }, [titles]);
 
   useEffect(() => {
@@ -103,8 +109,8 @@ export function RecommendationsTab() {
         <h1 className="text-lg font-semibold text-neutral-100">For You</h1>
         <p className="mt-0.5 text-sm text-neutral-400">
           {seeds.length > 0
-            ? 'Recommendations based on what you’ve watched.'
-            : 'Trending picks — mark something watched to get recommendations tailored to you.'}
+            ? 'Recommendations based on your watchlist and what you’ve watched.'
+            : 'Trending picks — add something to your watchlist to get recommendations tailored to you.'}
         </p>
       </div>
 
@@ -130,14 +136,14 @@ export function RecommendationsTab() {
           {rows === undefined && <p className="text-sm text-neutral-500">Loading...</p>}
           {rows && rows.length === 0 && (
             <p className="text-sm text-neutral-500">
-              No recommendations found for what you've watched yet.
+              No recommendations found for your watchlist yet.
             </p>
           )}
           {rows &&
             rows.map(({ seed, items }) => (
               <div key={seed.id} className="flex flex-col gap-2.5">
                 <h2 className="text-sm font-semibold text-neutral-100">
-                  Because you watched{' '}
+                  {seed.status === 'watched' ? 'Because you watched' : 'Because you want to watch'}{' '}
                   <span className="text-brand-300">{decodeEntities(seed.title)}</span>
                 </h2>
                 <PosterRow items={items} onSelect={handleSelect} />
