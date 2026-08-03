@@ -61,7 +61,14 @@ export function StatsTab() {
       (t) => t.watched_at && new Date(t.watched_at).getFullYear() === currentYear,
     );
     const watchingCount = titles.filter((t) => t.status === 'watching').length;
-    const backlogCount = titles.filter((t) => t.status === 'want_to_watch').length;
+    const backlog = titles.filter((t) => t.status === 'want_to_watch');
+    const backlogCount = backlog.length;
+    // Series' Runtime is typically per-episode, not the whole show, so a
+    // total-time estimate only makes sense for movies.
+    const backlogMovieMinutes = backlog
+      .filter((t) => t.media_type === 'movie')
+      .reduce((s, t) => s + parseRuntimeMinutes(t.runtime), 0);
+    const backlogMovieHours = backlogMovieMinutes / 60;
 
     const rated = watched.filter((t): t is Title & { my_rating: number } => t.my_rating != null);
     const avgRating = rated.length > 0 ? rated.reduce((s, t) => s + t.my_rating, 0) / rated.length : null;
@@ -86,6 +93,7 @@ export function StatsTab() {
       watchedThisYearCount: watchedThisYear.length,
       watchingCount,
       backlogCount,
+      backlogMovieHours,
       avgRating,
       ratedCount: rated.length,
       movieCount: movies.length,
@@ -124,7 +132,15 @@ export function StatsTab() {
         <StatTile label="Watched" value={stats.watchedCount} />
         <StatTile label="Watched this year" value={stats.watchedThisYearCount} />
         <StatTile label="Currently watching" value={stats.watchingCount} />
-        <StatTile label="Backlog" value={stats.backlogCount} />
+        <StatTile
+          label="Backlog"
+          value={stats.backlogCount}
+          sub={
+            stats.backlogMovieHours > 0
+              ? `~${stats.backlogMovieHours >= 10 ? Math.round(stats.backlogMovieHours) : stats.backlogMovieHours.toFixed(1)}h of movies`
+              : undefined
+          }
+        />
       </div>
 
       {stats.watchedCount === 0 ? (
