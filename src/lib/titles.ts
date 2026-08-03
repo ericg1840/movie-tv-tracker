@@ -10,7 +10,7 @@ function normalize(row: Title): Title {
   return { ...row, watched_episodes: row.watched_episodes ?? {} };
 }
 
-function detailToFields(detail: OmdbDetail) {
+export function detailToFields(detail: OmdbDetail) {
   return {
     imdb_id: detail.imdbID,
     title: detail.Title,

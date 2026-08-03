@@ -1,12 +1,10 @@
 import type { IconName } from '../components/Icon';
 
-export type Tab = 'search' | 'watchlist' | 'upcoming' | 'watched' | 'recommendations' | 'stats';
+export type Tab = 'search' | 'watchlist' | 'upcoming' | 'profile';
 
 export const TABS: { id: Tab; label: string; icon: IconName }[] = [
   { id: 'search', label: 'Add', icon: 'search' },
   { id: 'watchlist', label: 'Watchlist', icon: 'bookmark' },
   { id: 'upcoming', label: 'Upcoming', icon: 'calendar' },
-  { id: 'watched', label: 'Watched', icon: 'check' },
-  { id: 'recommendations', label: 'For You', icon: 'sparkle' },
-  { id: 'stats', label: 'Stats', icon: 'chart' },
+  { id: 'profile', label: 'Profile', icon: 'user' },
 ];

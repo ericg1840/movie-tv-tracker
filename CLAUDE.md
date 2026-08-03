@@ -1,6 +1,6 @@
-# Movie & TV Watchlist
+# AfterCredits
 
-Personal movie/TV tracker. React + TypeScript + Vite + Tailwind, Supabase
+Personal movie/TV tracker (formerly "Movie & TV Watchlist"). React + TypeScript + Vite + Tailwind, Supabase
 backend, deployed to GitHub Pages. Full user-facing setup is in
 [README.md](README.md) — this file is operational notes for whoever (human
 or Claude) picks this project back up.

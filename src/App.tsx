@@ -6,8 +6,7 @@ import { Sidebar } from './components/Sidebar';
 import { SearchTab } from './components/SearchTab';
 import { ListTab } from './components/ListTab';
 import { DetailModal } from './components/DetailModal';
-import { StatsTab } from './components/StatsTab';
-import { RecommendationsTab } from './components/RecommendationsTab';
+import { ProfileTab } from './components/ProfileTab';
 import { todayIso as today } from './lib/dates';
 import type { Tab } from './lib/tabs';
 
@@ -57,30 +56,8 @@ function TabContent({ tab }: { tab: Tab }) {
           ]}
         />
       );
-    case 'watched':
-      return (
-        <ListTab
-          heading="Watched"
-          emptyMessage="Nothing marked as watched yet."
-          filter={(t) => t.status === 'watched'}
-          sortOptions={[
-            {
-              label: 'Recently watched',
-              fn: (a, b) => (b.watched_at ?? '').localeCompare(a.watched_at ?? ''),
-            },
-            { label: 'My rating', fn: (a, b) => (b.my_rating ?? -1) - (a.my_rating ?? -1) },
-            {
-              label: 'IMDb rating',
-              fn: (a, b) => Number(b.imdb_rating ?? 0) - Number(a.imdb_rating ?? 0),
-            },
-            { label: 'Title (A–Z)', fn: (a, b) => a.title.localeCompare(b.title) },
-          ]}
-        />
-      );
-    case 'recommendations':
-      return <RecommendationsTab />;
-    case 'stats':
-      return <StatsTab />;
+    case 'profile':
+      return <ProfileTab />;
   }
 }
 
@@ -92,17 +69,17 @@ function App() {
       <DetailProvider>
         <div className="flex min-h-dvh flex-col bg-neutral-950">
           <header className="sticky top-0 z-10 border-b border-white/5 bg-neutral-950/95 px-4 pb-3 pt-[calc(env(safe-area-inset-top)+0.75rem)] backdrop-blur">
-            <h1 className="mx-auto flex max-w-6xl items-center text-lg font-extrabold tracking-tight text-neutral-100">
+            <h1 className="mx-auto flex max-w-6xl items-center text-lg font-extrabold tracking-tight text-neutral-100 2xl:max-w-[1440px]">
               <a href="./landing.html" className="flex items-center gap-1.5">
                 <img src="./favicon.svg" alt="" className="h-6 w-6 rounded-md" />
                 <span className="bg-gradient-to-r from-brand-400 to-brand-200 bg-clip-text text-transparent">
-                  Watchlist
+                  AfterCredits
                 </span>
               </a>
             </h1>
           </header>
 
-          <div className="mx-auto flex w-full max-w-6xl flex-1">
+          <div className="mx-auto flex w-full max-w-6xl flex-1 2xl:max-w-[1440px]">
             <Sidebar active={tab} onChange={setTab} />
 
             <main className="min-w-0 flex-1 pb-2">

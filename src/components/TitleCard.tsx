@@ -152,13 +152,13 @@ export function TitleCard({ title }: { title: Title }) {
         <button
           onClick={handleOpen}
           aria-label={`View details for ${displayTitle}`}
-          className="group aspect-[2/3] h-32 shrink-0 overflow-hidden rounded-xl bg-neutral-800 shadow-sm"
+          className="group relative aspect-[2/3] h-32 shrink-0 overflow-hidden rounded-xl bg-neutral-800 shadow-sm ring-1 ring-transparent transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-900/40 hover:ring-brand-500/40"
         >
           {title.poster_url ? (
             <img
               src={title.poster_url}
               alt={displayTitle}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
               loading="lazy"
             />
           ) : (
@@ -166,6 +166,12 @@ export function TitleCard({ title }: { title: Title }) {
               <Icon name="film" className="h-7 w-7" />
             </div>
           )}
+          <div className="pointer-events-none absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/70 via-black/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <span className="mb-1.5 flex items-center gap-1 rounded-full bg-black/40 px-1.5 py-0.5 text-[9px] font-semibold text-white backdrop-blur-sm">
+              <Icon name="eye" className="h-2.5 w-2.5" />
+              View details
+            </span>
+          </div>
         </button>
 
         <div className="flex min-w-0 flex-1 flex-col gap-1.5 py-0.5">

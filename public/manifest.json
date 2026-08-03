@@ -1,6 +1,6 @@
 {
-  "name": "Movie & TV Watchlist",
-  "short_name": "Watchlist",
+  "name": "AfterCredits",
+  "short_name": "AfterCredits",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

@@ -2,8 +2,36 @@ import type { Title } from '../types';
 import { useTitles } from '../context/TitlesContext';
 import { daysUntil, formatDate, todayIso } from '../lib/dates';
 
+function RatingPicker({ title }: { title: Title }) {
+  const { setRating } = useTitles();
+
+  return (
+    <div className="flex flex-nowrap items-center gap-1 overflow-x-auto">
+      {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => {
+        const active = title.my_rating === n;
+        return (
+          <button
+            key={n}
+            type="button"
+            onClick={() => setRating(title.id, active ? null : n)}
+            aria-pressed={active}
+            aria-label={`Rate ${n} out of 10`}
+            className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-medium transition-colors ${
+              active
+                ? 'bg-brand-700 text-white'
+                : 'border border-white/10 text-neutral-300 hover:bg-neutral-800'
+            }`}
+          >
+            {n}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export function StatusActions({ title }: { title: Title }) {
-  const { setStatus, setRating } = useTitles();
+  const { setStatus } = useTitles();
 
   if (title.released_on && title.released_on > todayIso()) {
     const days = daysUntil(title.released_on);
@@ -57,25 +85,14 @@ export function StatusActions({ title }: { title: Title }) {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <label className="flex items-center gap-1 text-xs text-neutral-300">
-        My rating
-        <select
-          value={title.my_rating ?? ''}
-          onChange={(e) => setRating(title.id, e.target.value ? Number(e.target.value) : null)}
-          className="rounded border border-white/10 bg-transparent py-0.5 pl-1 pr-4"
-        >
-          <option value="">–</option>
-          {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
-            <option key={n} value={n}>
-              {n}
-            </option>
-          ))}
-        </select>
-      </label>
+    <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1">
+        <span className="text-xs text-neutral-400">My rating</span>
+        <RatingPicker title={title} />
+      </div>
       <button
         onClick={() => setStatus(title.id, 'want_to_watch')}
-        className="rounded-full border border-white/10 px-3 py-1 text-xs font-medium text-neutral-200 hover:bg-neutral-800"
+        className="self-start rounded-full border border-white/10 px-3 py-1 text-xs font-medium text-neutral-200 hover:bg-neutral-800"
       >
         ↺ Rewatch
       </button>
