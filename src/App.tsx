@@ -6,16 +6,12 @@ import { Sidebar } from './components/Sidebar';
 import { SearchTab } from './components/SearchTab';
 import { ListTab } from './components/ListTab';
 import { DetailModal } from './components/DetailModal';
-import { StatsTab } from './components/StatsTab';
-import { RecommendationsTab } from './components/RecommendationsTab';
-import { HomeTab } from './components/HomeTab';
+import { ProfileTab } from './components/ProfileTab';
 import { todayIso as today } from './lib/dates';
 import type { Tab } from './lib/tabs';
 
-function TabContent({ tab, onNavigate }: { tab: Tab; onNavigate: (tab: Tab) => void }) {
+function TabContent({ tab }: { tab: Tab }) {
   switch (tab) {
-    case 'home':
-      return <HomeTab onNavigate={onNavigate} />;
     case 'search':
       return <SearchTab />;
     case 'watchlist':
@@ -60,35 +56,13 @@ function TabContent({ tab, onNavigate }: { tab: Tab; onNavigate: (tab: Tab) => v
           ]}
         />
       );
-    case 'watched':
-      return (
-        <ListTab
-          heading="Watched"
-          emptyMessage="Nothing marked as watched yet."
-          filter={(t) => t.status === 'watched'}
-          sortOptions={[
-            {
-              label: 'Recently watched',
-              fn: (a, b) => (b.watched_at ?? '').localeCompare(a.watched_at ?? ''),
-            },
-            { label: 'My rating', fn: (a, b) => (b.my_rating ?? -1) - (a.my_rating ?? -1) },
-            {
-              label: 'IMDb rating',
-              fn: (a, b) => Number(b.imdb_rating ?? 0) - Number(a.imdb_rating ?? 0),
-            },
-            { label: 'Title (A–Z)', fn: (a, b) => a.title.localeCompare(b.title) },
-          ]}
-        />
-      );
-    case 'recommendations':
-      return <RecommendationsTab />;
-    case 'stats':
-      return <StatsTab />;
+    case 'profile':
+      return <ProfileTab />;
   }
 }
 
 function App() {
-  const [tab, setTab] = useState<Tab>('home');
+  const [tab, setTab] = useState<Tab>('watchlist');
 
   return (
     <TitlesProvider>
@@ -110,7 +84,7 @@ function App() {
 
             <main className="min-w-0 flex-1 pb-2">
               <div key={tab} className="animate-tab-in mx-auto max-w-lg md:max-w-none">
-                <TabContent tab={tab} onNavigate={setTab} />
+                <TabContent tab={tab} />
               </div>
             </main>
           </div>
