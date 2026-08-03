@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { computeStats, parseRuntimeMinutes } from './stats';
+import { computeStats, computeMonthStats, parseRuntimeMinutes } from './stats';
 import type { Title } from '../types';
 
 let nextId = 0;
@@ -136,5 +136,43 @@ describe('computeStats', () => {
     const best = makeTitle({ status: 'watched', my_rating: 9, title: 'Best' });
     const titles = [makeTitle({ status: 'watched', my_rating: 5 }), best];
     expect(computeStats(titles).topRated?.title).toBe('Best');
+  });
+});
+
+describe('computeMonthStats', () => {
+  const now = new Date('2026-08-15T00:00:00Z');
+
+  it('returns zeroed-out stats for an empty list', () => {
+    const stats = computeMonthStats([], now);
+    expect(stats).toEqual({ watchedCount: 0, avgRating: null });
+  });
+
+  it('only counts titles watched in the given month/year', () => {
+    const titles = [
+      makeTitle({ status: 'watched', watched_at: '2026-08-01T00:00:00.000Z' }),
+      makeTitle({ status: 'watched', watched_at: '2026-08-31T00:00:00.000Z' }),
+      makeTitle({ status: 'watched', watched_at: '2026-07-31T00:00:00.000Z' }),
+      makeTitle({ status: 'watched', watched_at: '2025-08-15T00:00:00.000Z' }),
+      makeTitle({ status: 'want_to_watch', watched_at: null }),
+    ];
+    expect(computeMonthStats(titles, now).watchedCount).toBe(2);
+  });
+
+  it('averages ratings only across rated titles watched that month', () => {
+    const titles = [
+      makeTitle({ status: 'watched', watched_at: '2026-08-01T00:00:00.000Z', my_rating: 6 }),
+      makeTitle({ status: 'watched', watched_at: '2026-08-02T00:00:00.000Z', my_rating: 10 }),
+      makeTitle({ status: 'watched', watched_at: '2026-08-03T00:00:00.000Z', my_rating: null }),
+      makeTitle({ status: 'watched', watched_at: '2026-07-01T00:00:00.000Z', my_rating: 1 }),
+    ];
+    expect(computeMonthStats(titles, now).avgRating).toBe(8);
+  });
+
+  it('defaults to the current date when none is given', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-10T00:00:00Z'));
+    const titles = [makeTitle({ status: 'watched', watched_at: '2026-03-05T00:00:00.000Z' })];
+    expect(computeMonthStats(titles).watchedCount).toBe(1);
+    vi.useRealTimers();
   });
 });

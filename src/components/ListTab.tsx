@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import type { Title } from '../types';
 import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
+import { getWatchProviders } from '../lib/tmdb';
 import { TitleCard } from './TitleCard';
 import { Icon } from './Icon';
 
@@ -31,6 +32,8 @@ export function ListTab({
   const [typeFilter, setTypeFilter] = useState<'all' | 'movie' | 'series'>('all');
   const [genreFilter, setGenreFilter] = useState('all');
   const [rolling, setRolling] = useState(false);
+  const [checkingStream, setCheckingStream] = useState(false);
+  const [pickError, setPickError] = useState<string | null>(null);
 
   const baseItems = useMemo(() => titles.filter(filter), [titles, filter]);
 
@@ -51,13 +54,38 @@ export function ListTab({
       .sort(sortOptions[sortIndex]?.fn);
   }, [baseItems, typeFilter, genreFilter, sortIndex, sortOptions]);
 
-  function handlePick() {
-    if (rolling || items.length === 0) return;
-    setRolling(true);
-    window.setTimeout(() => {
-      setRolling(false);
-      openStored(items[Math.floor(Math.random() * items.length)]);
-    }, ROLL_DURATION_MS);
+  async function handlePick() {
+    if (rolling || checkingStream) return;
+    const movieCandidates = items.filter((t) => t.media_type === 'movie');
+    if (movieCandidates.length === 0) {
+      setPickError('No movies to pick from — add some, or clear your filters.');
+      return;
+    }
+
+    setPickError(null);
+    setCheckingStream(true);
+    try {
+      const results = await Promise.all(
+        movieCandidates.map(async (t) => ({
+          title: t,
+          providers: await getWatchProviders(t.imdb_id).catch(() => null),
+        })),
+      );
+      const streamable = results.filter((r) => (r.providers?.flatrate?.length ?? 0) > 0).map((r) => r.title);
+
+      if (streamable.length === 0) {
+        setPickError("None of your movies are available to stream right now.");
+        return;
+      }
+
+      setRolling(true);
+      window.setTimeout(() => {
+        setRolling(false);
+        openStored(streamable[Math.floor(Math.random() * streamable.length)]);
+      }, ROLL_DURATION_MS);
+    } finally {
+      setCheckingStream(false);
+    }
   }
 
   return (
@@ -70,13 +98,13 @@ export function ListTab({
           {randomPick && (
             <button
               onClick={handlePick}
-              disabled={rolling || items.length === 0}
-              aria-label="Pick something for me"
-              title="Pick something for me"
+              disabled={rolling || checkingStream || items.length === 0}
+              aria-label="Pick a movie I can stream right now"
+              title="Pick a movie I can stream right now"
               className="flex items-center gap-1.5 rounded-full bg-brand-950/50 px-3 py-1.5 text-xs font-medium text-brand-300 transition-colors hover:bg-brand-900/60 disabled:cursor-default disabled:opacity-40"
             >
-              <Icon name="dice" className={`h-4 w-4 ${rolling ? 'animate-dice-roll' : ''}`} />
-              Pick for me
+              <Icon name="dice" className={`h-4 w-4 ${rolling || checkingStream ? 'animate-dice-roll' : ''}`} />
+              {checkingStream ? 'Checking...' : 'Pick for me'}
             </button>
           )}
           <button
@@ -88,6 +116,8 @@ export function ListTab({
           </button>
         </div>
       </div>
+
+      {pickError && <p className="text-xs text-accent-400">{pickError}</p>}
 
       {baseItems.length > 0 && (
         <div className="flex flex-wrap items-center gap-2 text-xs">
