@@ -1,6 +1,14 @@
 import type { ReactNode } from 'react';
 
-export type IconName = 'search' | 'bookmark' | 'calendar' | 'check' | 'film' | 'dice' | 'chart';
+export type IconName =
+  | 'search'
+  | 'bookmark'
+  | 'calendar'
+  | 'check'
+  | 'film'
+  | 'dice'
+  | 'chart'
+  | 'sparkle';
 
 const PATHS: Record<IconName, ReactNode> = {
   search: (
@@ -42,6 +50,12 @@ const PATHS: Record<IconName, ReactNode> = {
     <>
       <path d="M4.25 3.25v16.5h16.5" />
       <path d="M8 19.75v-6M12.5 19.75v-9.5M17 19.75v-4" />
+    </>
+  ),
+  sparkle: (
+    <>
+      <path d="M12 3.25c.6 3.4 1.35 4.15 4.75 4.75-3.4.6-4.15 1.35-4.75 4.75-.6-3.4-1.35-4.15-4.75-4.75 3.4-.6 4.15-1.35 4.75-4.75Z" />
+      <path d="M18.5 14.25c.32 1.8.7 2.18 2.5 2.5-1.8.32-2.18.7-2.5 2.5-.32-1.8-.7-2.18-2.5-2.5 1.8-.32 2.18-.7 2.5-2.5Z" />
     </>
   ),
 };
