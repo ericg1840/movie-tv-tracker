@@ -61,9 +61,14 @@ export function DiscoverGrid({ type }: { type?: 'movie' | 'series' }) {
                 </span>
               </div>
             </div>
-            <p className="w-full min-w-0 truncate text-xs font-medium text-neutral-100">
-              {item.title}
-            </p>
+            <div className="flex min-w-0 flex-col">
+              <p className="w-full min-w-0 truncate text-xs font-medium text-neutral-100">
+                {item.title}
+              </p>
+              <p className="truncate text-[11px] text-neutral-400">
+                {item.year ?? '—'} · {item.media_type === 'tv' ? 'TV' : 'Movie'}
+              </p>
+            </div>
           </button>
         ))}
       </div>
