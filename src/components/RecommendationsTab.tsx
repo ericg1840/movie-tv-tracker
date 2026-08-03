@@ -13,6 +13,14 @@ interface Row {
   items: TrendingItem[];
 }
 
+// Our titles table keys off imdb_id, but TMDB's recommendation/trending
+// endpoints only return TMDB ids, so cross-referencing by id would mean an
+// extra API call per result. Title+year is cheap and close enough to dedupe
+// against what's already in the list.
+function dedupeKey(title: string, year: string | null): string {
+  return `${decodeEntities(title).trim().toLowerCase()}|${year ?? ''}`;
+}
+
 function PosterRow({
   items,
   onSelect,
@@ -72,15 +80,21 @@ export function RecommendationsTab() {
     return [...rated, ...watchlist, ...unrated].slice(0, MAX_SEEDS);
   }, [titles]);
 
+  const existingKeys = useMemo(
+    () => new Set(titles.map((t) => dedupeKey(t.title, t.year))),
+    [titles],
+  );
+
   useEffect(() => {
     if (loading) return;
 
     let cancelled = false;
+    const notAlreadyAdded = (item: TrendingItem) => !existingKeys.has(dedupeKey(item.title, item.year));
 
     if (seeds.length === 0) {
       setRows(undefined);
       getTrending()
-        .then((items) => !cancelled && setTrending(items))
+        .then((items) => !cancelled && setTrending(items.filter(notAlreadyAdded)))
         .catch(() => !cancelled && setTrending([]));
       return () => {
         cancelled = true;
@@ -89,7 +103,10 @@ export function RecommendationsTab() {
 
     setRows(undefined);
     Promise.all(
-      seeds.map(async (seed) => ({ seed, items: await getSimilarTitles(seed.imdb_id) })),
+      seeds.map(async (seed) => ({
+        seed,
+        items: (await getSimilarTitles(seed.imdb_id)).filter(notAlreadyAdded),
+      })),
     )
       .then((results) => !cancelled && setRows(results.filter((r) => r.items.length > 0)))
       .catch(() => !cancelled && setRows([]));
@@ -97,7 +114,7 @@ export function RecommendationsTab() {
     return () => {
       cancelled = true;
     };
-  }, [seeds, loading]);
+  }, [seeds, existingKeys, loading]);
 
   function handleSelect(item: TrendingItem) {
     openDiscover(item);
