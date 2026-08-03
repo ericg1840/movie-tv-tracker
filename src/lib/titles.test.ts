@@ -14,6 +14,7 @@ const baseDetail: OmdbDetail = {
   Genre: 'Action, Sci-Fi',
   Runtime: '136 min',
   imdbRating: '8.7',
+  Rated: 'R',
   Released: '31 Mar 1999',
   Response: 'True',
 };
@@ -32,6 +33,7 @@ describe('detailToFields', () => {
       genre: 'Action, Sci-Fi',
       runtime: '136 min',
       imdb_rating: '8.7',
+      rated: 'R',
       released_on: '1999-03-31',
     });
   });
@@ -54,6 +56,7 @@ describe('detailToFields', () => {
       Genre: 'N/A',
       Runtime: 'N/A',
       imdbRating: 'N/A',
+      Rated: 'N/A',
     });
     expect(fields.poster_url).toBeNull();
     expect(fields.plot).toBeNull();
@@ -62,5 +65,6 @@ describe('detailToFields', () => {
     expect(fields.genre).toBeNull();
     expect(fields.runtime).toBeNull();
     expect(fields.imdb_rating).toBeNull();
+    expect(fields.rated).toBeNull();
   });
 });

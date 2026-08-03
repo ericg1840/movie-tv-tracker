@@ -488,6 +488,7 @@ function StoredDetail({ title }: { title: Title }) {
 
   const badges = [
     live.media_type === 'series' ? 'TV' : 'Movie',
+    live.rated,
     live.year,
     live.runtime,
     live.imdb_rating ? `⭐ ${live.imdb_rating}` : null,
@@ -577,6 +578,7 @@ function SearchDetail({ imdbId }: { imdbId: string }) {
 
   const badges = [
     detail.Type === 'series' ? 'TV' : 'Movie',
+    detail.Rated !== 'N/A' ? detail.Rated : null,
     detail.Year,
     detail.Runtime !== 'N/A' ? detail.Runtime : null,
     detail.imdbRating !== 'N/A' ? `⭐ ${detail.imdbRating}` : null,

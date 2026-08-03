@@ -4,10 +4,10 @@ import type { NewTitle, OmdbDetail, Status, Title } from '../types';
 
 const clean = (value: string | undefined) => (value && value !== 'N/A' ? value : null);
 
-// Defaults watched_episodes for rows read before the 0003 migration has been
-// applied (the column is simply absent from `select('*')` results until then).
+// Defaults fields for rows read before their migration has been applied (the
+// column is simply absent from `select('*')` results until then).
 function normalize(row: Title): Title {
-  return { ...row, watched_episodes: row.watched_episodes ?? {} };
+  return { ...row, watched_episodes: row.watched_episodes ?? {}, rated: row.rated ?? null };
 }
 
 export function detailToFields(detail: OmdbDetail) {
@@ -23,6 +23,7 @@ export function detailToFields(detail: OmdbDetail) {
     genre: clean(detail.Genre),
     runtime: clean(detail.Runtime),
     imdb_rating: clean(detail.imdbRating),
+    rated: clean(detail.Rated),
     released_on: parseOmdbDate(detail.Released),
   };
 }

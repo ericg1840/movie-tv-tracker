@@ -88,8 +88,9 @@ export function PosterRow({
             <p className="w-full min-w-0 truncate text-xs font-medium text-neutral-200">
               {item.title}
             </p>
-            <p className="truncate text-[11px] text-neutral-400">
+            <p className="text-[11px] leading-tight text-neutral-400">
               {item.year ?? '—'} · {item.media_type === 'tv' ? 'TV' : 'Movie'}
+              {item.rating != null && <> · ⭐ {item.rating}</>}
             </p>
           </div>
         </button>

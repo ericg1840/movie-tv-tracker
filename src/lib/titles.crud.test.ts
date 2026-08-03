@@ -44,7 +44,7 @@ beforeEach(() => {
 describe('fetchTitles', () => {
   it('returns the rows on success', async () => {
     fromMock.mockReturnValue(mockQueryBuilder({ data: [{ id: '1' }], error: null }) as never);
-    expect(await fetchTitles()).toEqual([{ id: '1', watched_episodes: {} }]);
+    expect(await fetchTitles()).toEqual([{ id: '1', watched_episodes: {}, rated: null }]);
   });
 
   it('returns an empty array when data is null', async () => {
@@ -72,13 +72,14 @@ describe('addTitleByImdbId', () => {
       Genre: 'N/A',
       Runtime: 'N/A',
       imdbRating: 'N/A',
+      Rated: 'N/A',
       Released: 'N/A',
       Response: 'True',
     } satisfies OmdbDetail);
     fromMock.mockReturnValue(mockQueryBuilder({ data: { id: '1' }, error: null }) as never);
 
     const result = await addTitleByImdbId('tt1');
-    expect(result).toEqual({ id: '1', watched_episodes: {} });
+    expect(result).toEqual({ id: '1', watched_episodes: {}, rated: null });
   });
 
   it('translates a unique-constraint violation into a friendly error', async () => {
@@ -94,6 +95,7 @@ describe('addTitleByImdbId', () => {
       Genre: 'N/A',
       Runtime: 'N/A',
       imdbRating: 'N/A',
+      Rated: 'N/A',
       Released: 'N/A',
       Response: 'True',
     } satisfies OmdbDetail);

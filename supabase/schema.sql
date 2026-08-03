@@ -14,6 +14,7 @@ create table if not exists public.titles (
   genre text,
   runtime text,
   imdb_rating text,
+  rated text,
   released_on date,
   status text not null default 'want_to_watch'
     check (status in ('want_to_watch', 'watching', 'watched')),

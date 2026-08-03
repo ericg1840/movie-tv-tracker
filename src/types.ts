@@ -15,6 +15,8 @@ export interface Title {
   genre: string | null;
   runtime: string | null;
   imdb_rating: string | null;
+  /** Content/parental rating, e.g. "PG-13", "R", "TV-MA". */
+  rated: string | null;
   released_on: string | null;
   status: Status;
   my_rating: number | null;
@@ -47,6 +49,7 @@ export interface OmdbDetail {
   Genre: string;
   Runtime: string;
   imdbRating: string;
+  Rated: string;
   Released: string;
   Response: 'True' | 'False';
   Error?: string;

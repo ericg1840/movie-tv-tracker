@@ -65,6 +65,11 @@ export interface TrendingItem {
   title: string;
   year: string | null;
   poster_path: string | null;
+  rating: number | null;
+}
+
+function roundRating(voteAverage: number | undefined): number | null {
+  return voteAverage ? Math.round(voteAverage * 10) / 10 : null;
 }
 
 export function posterUrl(path: string): string {
@@ -79,6 +84,7 @@ interface TmdbTrendingResult {
   release_date?: string;
   first_air_date?: string;
   poster_path: string | null;
+  vote_average?: number;
 }
 
 export async function getTrending(mediaType?: 'movie' | 'tv'): Promise<TrendingItem[]> {
@@ -96,6 +102,7 @@ export async function getTrending(mediaType?: 'movie' | 'tv'): Promise<TrendingI
       title: r.title ?? r.name ?? 'Untitled',
       year: (r.release_date ?? r.first_air_date ?? '').slice(0, 4) || null,
       poster_path: r.poster_path,
+      rating: roundRating(r.vote_average),
     }));
 }
 
@@ -117,6 +124,7 @@ export async function getSimilarTitles(imdbId: string): Promise<TrendingItem[]> 
     title: r.title ?? r.name ?? 'Untitled',
     year: (r.release_date ?? r.first_air_date ?? '').slice(0, 4) || null,
     poster_path: r.poster_path,
+    rating: roundRating(r.vote_average),
   }));
 }
 
@@ -255,6 +263,7 @@ interface TmdbCombinedCreditItem {
   first_air_date?: string;
   poster_path: string | null;
   popularity: number;
+  vote_average?: number;
 }
 
 // Talk-show/awards-show cameos where someone appears "as themselves" clutter
@@ -297,6 +306,7 @@ export async function getPersonCredits(personId: number): Promise<TrendingItem[]
       title: r.title ?? r.name ?? 'Untitled',
       year: (r.release_date ?? r.first_air_date ?? '').slice(0, 4) || null,
       poster_path: r.poster_path,
+      rating: roundRating(r.vote_average),
     }));
 }
 

@@ -21,15 +21,22 @@ describe('getTrending', () => {
     mockFetchSequence(
       jsonResponse({
         results: [
-          { id: 1, media_type: 'movie', title: 'Movie A', release_date: '2020-05-01', poster_path: '/a.jpg' },
+          {
+            id: 1,
+            media_type: 'movie',
+            title: 'Movie A',
+            release_date: '2020-05-01',
+            poster_path: '/a.jpg',
+            vote_average: 7.85,
+          },
           { id: 2, media_type: 'tv', name: 'Show B', first_air_date: '2019-01-01', poster_path: null },
         ],
       }),
     );
     const items = await getTrending();
     expect(items).toEqual([
-      { id: 1, media_type: 'movie', title: 'Movie A', year: '2020', poster_path: '/a.jpg' },
-      { id: 2, media_type: 'tv', title: 'Show B', year: '2019', poster_path: null },
+      { id: 1, media_type: 'movie', title: 'Movie A', year: '2020', poster_path: '/a.jpg', rating: 7.9 },
+      { id: 2, media_type: 'tv', title: 'Show B', year: '2019', poster_path: null, rating: null },
     ]);
   });
 

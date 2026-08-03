@@ -205,6 +205,11 @@ export function TitleCard({ title }: { title: Title }) {
             <span className="rounded-full bg-brand-950/50 px-2 py-0.5 font-medium text-brand-300">
               {title.media_type === 'series' ? 'TV' : 'Movie'}
             </span>
+            {title.rated && (
+              <span className="rounded border border-white/10 px-1.5 py-0.5 font-medium text-neutral-300">
+                {title.rated}
+              </span>
+            )}
             {title.year && <span>{title.year}</span>}
             {title.runtime && <span>· {title.runtime}</span>}
             {title.imdb_rating && <span>· ⭐ {title.imdb_rating}</span>}

@@ -19,6 +19,7 @@ function makeTitle(overrides: Partial<Title> = {}): Title {
     genre: null,
     runtime: null,
     imdb_rating: null,
+    rated: null,
     released_on: null,
     status: 'watched',
     my_rating: null,
@@ -78,7 +79,11 @@ describe('existingKeySet / notAlreadyAdded', () => {
     const titles = [makeTitle({ title: 'The Matrix', year: '1999' })];
     const keys = existingKeySet(titles);
     const keep = notAlreadyAdded(keys);
-    expect(keep({ id: 1, media_type: 'movie', title: 'The Matrix', year: '1999', poster_path: null })).toBe(false);
-    expect(keep({ id: 2, media_type: 'movie', title: 'Inception', year: '2010', poster_path: null })).toBe(true);
+    expect(
+      keep({ id: 1, media_type: 'movie', title: 'The Matrix', year: '1999', poster_path: null, rating: null }),
+    ).toBe(false);
+    expect(
+      keep({ id: 2, media_type: 'movie', title: 'Inception', year: '2010', poster_path: null, rating: null }),
+    ).toBe(true);
   });
 });

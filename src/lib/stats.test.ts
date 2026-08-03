@@ -19,6 +19,7 @@ function makeTitle(overrides: Partial<Title> = {}): Title {
     genre: null,
     runtime: null,
     imdb_rating: null,
+    rated: null,
     released_on: null,
     status: 'watched',
     my_rating: null,
