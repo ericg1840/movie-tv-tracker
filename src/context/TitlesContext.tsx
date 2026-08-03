@@ -15,6 +15,7 @@ import {
   updateTitleNotes,
   updateTitleRating,
   updateTitleStatus,
+  updateTitleWatchedEpisodes,
 } from '../lib/titles';
 
 interface TitlesContextValue {
@@ -26,6 +27,7 @@ interface TitlesContextValue {
   setStatus: (id: string, status: Status) => Promise<void>;
   setRating: (id: string, rating: number | null) => Promise<void>;
   setNotes: (id: string, notes: string | null) => Promise<void>;
+  setWatchedEpisodes: (id: string, watchedEpisodes: Record<string, number[]>) => Promise<void>;
   remove: (id: string) => Promise<void>;
   refreshDetails: (id: string) => Promise<void>;
 }
@@ -73,6 +75,14 @@ export function TitlesProvider({ children }: { children: ReactNode }) {
     setTitles((prev) => prev.map((t) => (t.id === id ? updated : t)));
   }, []);
 
+  const setWatchedEpisodes = useCallback(
+    async (id: string, watchedEpisodes: Record<string, number[]>) => {
+      const updated = await updateTitleWatchedEpisodes(id, watchedEpisodes);
+      setTitles((prev) => prev.map((t) => (t.id === id ? updated : t)));
+    },
+    [],
+  );
+
   const remove = useCallback(async (id: string) => {
     await removeTitle(id);
     setTitles((prev) => prev.filter((t) => t.id !== id));
@@ -99,6 +109,7 @@ export function TitlesProvider({ children }: { children: ReactNode }) {
         setStatus,
         setRating,
         setNotes,
+        setWatchedEpisodes,
         remove,
         refreshDetails,
       }}

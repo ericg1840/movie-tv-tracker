@@ -4,6 +4,12 @@ import type { NewTitle, OmdbDetail, Status, Title } from '../types';
 
 const clean = (value: string | undefined) => (value && value !== 'N/A' ? value : null);
 
+// Defaults watched_episodes for rows read before the 0003 migration has been
+// applied (the column is simply absent from `select('*')` results until then).
+function normalize(row: Title): Title {
+  return { ...row, watched_episodes: row.watched_episodes ?? {} };
+}
+
 function detailToFields(detail: OmdbDetail) {
   return {
     imdb_id: detail.imdbID,
@@ -27,7 +33,7 @@ export async function fetchTitles(): Promise<Title[]> {
     .select('*')
     .order('added_at', { ascending: false });
   if (error) throw error;
-  return data ?? [];
+  return (data ?? []).map(normalize);
 }
 
 export async function addTitleByImdbId(imdbId: string): Promise<Title> {
@@ -39,6 +45,7 @@ export async function addTitleByImdbId(imdbId: string): Promise<Title> {
     my_rating: null,
     notes: null,
     watched_at: null,
+    watched_episodes: {},
   };
 
   const { data, error } = await supabase
@@ -53,7 +60,7 @@ export async function addTitleByImdbId(imdbId: string): Promise<Title> {
     }
     throw error;
   }
-  return data;
+  return normalize(data);
 }
 
 export async function refreshTitleDetails(id: string, imdbId: string): Promise<Title> {
@@ -65,7 +72,7 @@ export async function refreshTitleDetails(id: string, imdbId: string): Promise<T
     .select()
     .single();
   if (error) throw error;
-  return data;
+  return normalize(data);
 }
 
 export async function updateTitleStatus(id: string, status: Status): Promise<Title> {
@@ -80,7 +87,7 @@ export async function updateTitleStatus(id: string, status: Status): Promise<Tit
     .select()
     .single();
   if (error) throw error;
-  return data;
+  return normalize(data);
 }
 
 export async function updateTitleRating(id: string, myRating: number | null): Promise<Title> {
@@ -91,7 +98,7 @@ export async function updateTitleRating(id: string, myRating: number | null): Pr
     .select()
     .single();
   if (error) throw error;
-  return data;
+  return normalize(data);
 }
 
 export async function updateTitleNotes(id: string, notes: string | null): Promise<Title> {
@@ -102,7 +109,21 @@ export async function updateTitleNotes(id: string, notes: string | null): Promis
     .select()
     .single();
   if (error) throw error;
-  return data;
+  return normalize(data);
+}
+
+export async function updateTitleWatchedEpisodes(
+  id: string,
+  watchedEpisodes: Record<string, number[]>,
+): Promise<Title> {
+  const { data, error } = await supabase
+    .from('titles')
+    .update({ watched_episodes: watchedEpisodes })
+    .eq('id', id)
+    .select()
+    .single();
+  if (error) throw error;
+  return normalize(data);
 }
 
 export async function removeTitle(id: string): Promise<void> {

@@ -161,3 +161,50 @@ export async function getTrailer(imdbId: string): Promise<Trailer | null> {
 
   return trailer ? { key: trailer.key, name: trailer.name } : null;
 }
+
+export interface Season {
+  season_number: number;
+  name: string;
+  episode_count: number;
+}
+
+export interface Episode {
+  episode_number: number;
+  name: string;
+  air_date: string | null;
+}
+
+export async function getSeasons(imdbId: string): Promise<Season[]> {
+  const target = await findTmdbTarget(imdbId);
+  if (!target || target.mediaType !== 'tv') return [];
+
+  const res = await fetch(`${BASE_URL}/tv/${target.id}?api_key=${apiKey}`);
+  if (!res.ok) return [];
+
+  const data = await res.json();
+  const seasons: Season[] = data.seasons ?? [];
+  // Season 0 is "Specials" on TMDB, not a real season of the show.
+  return seasons.filter((s) => s.season_number > 0);
+}
+
+export async function getSeasonEpisodes(
+  imdbId: string,
+  seasonNumber: number,
+): Promise<Episode[]> {
+  const target = await findTmdbTarget(imdbId);
+  if (!target || target.mediaType !== 'tv') return [];
+
+  const res = await fetch(
+    `${BASE_URL}/tv/${target.id}/season/${seasonNumber}?api_key=${apiKey}`,
+  );
+  if (!res.ok) return [];
+
+  const data = await res.json();
+  const episodes: { episode_number: number; name: string; air_date: string | null }[] =
+    data.episodes ?? [];
+  return episodes.map((e) => ({
+    episode_number: e.episode_number,
+    name: e.name,
+    air_date: e.air_date || null,
+  }));
+}

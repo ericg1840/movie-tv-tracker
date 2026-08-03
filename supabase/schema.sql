@@ -20,7 +20,8 @@ create table if not exists public.titles (
   my_rating smallint check (my_rating between 1 and 10),
   notes text,
   added_at timestamptz not null default now(),
-  watched_at timestamptz
+  watched_at timestamptz,
+  watched_episodes jsonb not null default '{}'::jsonb
 );
 
 create index if not exists titles_status_idx on public.titles (status);

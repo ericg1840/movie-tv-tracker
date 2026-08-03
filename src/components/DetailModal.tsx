@@ -7,6 +7,7 @@ import { decodeEntities } from '../lib/text';
 import { useTitles } from '../context/TitlesContext';
 import { useDetail } from '../context/DetailContext';
 import { StatusActions } from './StatusActions';
+import { SeasonTracker } from './SeasonTracker';
 import { WatchProviders } from './WatchProviders';
 import { Trailer } from './Trailer';
 import { Icon } from './Icon';
@@ -405,6 +406,8 @@ function StoredDetail({ title }: { title: Title }) {
       <Field label="Director" value={live.director} />
       <Field label="Starring" value={live.actors} />
       {live.plot && <ExpandablePlot text={live.plot} />}
+
+      {live.media_type === 'series' && <SeasonTracker title={live} />}
 
       <WatchProviders imdbId={live.imdb_id} />
 

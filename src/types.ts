@@ -21,6 +21,8 @@ export interface Title {
   notes: string | null;
   added_at: string;
   watched_at: string | null;
+  /** Season number -> watched episode numbers. Movies never populate this. */
+  watched_episodes: Record<string, number[]>;
 }
 
 export type NewTitle = Omit<Title, 'id' | 'added_at'>;
